@@ -1,0 +1,24 @@
+<div class="estructura">
+  <aside class="barra-lateral" [class.abierta]="menuAbierto">
+    <div class="identidad"><span class="identidad-simbolo">⚡</span><div><b>Electromecánica</b><small>GESTIÓN INDUSTRIAL</small></div></div>
+    <nav>
+      <a *ngFor="let item of visibles" [routerLink]="item.ruta" routerLinkActive="activo" (click)="menuAbierto=false">
+        <span class="simbolo-menu">{{ item.simbolo }}</span><span>{{ item.etiqueta }}</span>
+      </a>
+    </nav>
+    <div class="sesion" *ngIf="autenticacion.usuario$ | async as usuario">
+      <div class="avatar">{{ usuario.nombre.charAt(0) }}{{ usuario.apellido.charAt(0) }}</div>
+      <div><b>{{ usuario.nombre }} {{ usuario.apellido }}</b><small>{{ usuario.rol }}</small></div>
+      <button (click)="salir()" title="Cerrar sesión">↪</button>
+    </div>
+  </aside>
+  <div class="contenido-aplicacion">
+    <header class="barra-superior">
+      <button class="boton-menu" (click)="menuAbierto=!menuAbierto">☰</button>
+      <div><span class="indicador-linea"></span> Sistema operativo <b>en línea</b></div>
+      <span class="fecha-superior">{{ (autenticacion.usuario$ | async)?.correo }}</span>
+    </header>
+    <main class="area-trabajo"><router-outlet></router-outlet></main>
+  </div>
+  <button class="fondo-menu" *ngIf="menuAbierto" (click)="menuAbierto=false" aria-label="Cerrar menú"></button>
+</div>

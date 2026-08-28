@@ -1,0 +1,131 @@
+<section class="pagina">
+  <header class="encabezado-pagina">
+    <div>
+      <p class="sobretitulo">POSVENTA Y TRAZABILIDAD</p>
+      <h1>Devoluciones</h1>
+      <p>Reposición controlada de stock dentro de los 7 días posteriores a la venta.</p>
+    </div>
+    <span class="insignia">{{ devoluciones.length }} devoluciones</span>
+  </header>
+
+  <div class="alerta exito" *ngIf="mensaje">{{ mensaje }}</div>
+  <div class="alerta error" *ngIf="mensajeError">{{ mensajeError }}</div>
+
+  <article class="tarjeta panel-formulario horizontal devolucion-formulario" *ngIf="puedeProcesar">
+    <div>
+      <p class="sobretitulo">NUEVA DEVOLUCIÓN</p>
+      <h2>Ubica la venta</h2>
+      <p>Busca mientras escribes o escanea el QR. Solo se aceptan ventas con menos de 7 días.</p>
+    </div>
+
+    <div class="contenido-devolucion">
+      <div class="busqueda-venta">
+        <label>Boleta, venta, documento o cliente
+          <div class="control-busqueda-venta">
+            <input [(ngModel)]="terminoBusqueda" (ngModelChange)="alCambiarBusqueda($event)"
+                   (keyup.enter)="seleccionarPrimera()"
+                   placeholder="Ej.: 00000004, B001, DNI o nombre" autocomplete="off">
+            <button type="button" class="boton secundario" (click)="iniciarEscaner()" title="Escanear QR de la boleta">
+              <span aria-hidden="true">▣</span> Escanear QR
+            </button>
+          </div>
+        </label>
+        <small>También puedes escribir solo los últimos dígitos. Las ventas con el plazo vencido no aparecen.</small>
+
+        <div class="resultados-venta" *ngIf="terminoBusqueda.trim() && ventasFiltradas.length">
+          <button type="button" *ngFor="let venta of ventasFiltradas"
+                  [class.seleccionada]="venta.id === ventaId" (click)="seleccionarVenta(venta)">
+            <span>
+              <b>{{ venta.comprobante?.numero || venta.numeroVenta }}</b>
+              <small>{{ venta.numeroVenta }} · {{ venta.clienteNombre }} · Doc. {{ venta.clienteNumeroDocumento }}</small>
+              <small>Devolución disponible hasta: {{ fechaLimiteDevolucion(venta) | date:'dd/MM/yyyy HH:mm' }}</small>
+            </span>
+            <strong>{{ venta.total | moneda }}</strong>
+          </button>
+        </div>
+        <div class="sin-coincidencias" *ngIf="terminoBusqueda.trim() && !ventasFiltradas.length">
+          No se encontraron ventas disponibles dentro del plazo de 7 días.
+        </div>
+      </div>
+
+      <div class="venta-elegida" *ngIf="ventaSeleccionada as venta">
+        <span>
+          <small>VENTA SELECCIONADA</small>
+          <b>{{ venta.comprobante?.numero || venta.numeroVenta }}</b>
+        </span>
+        <span>{{ venta.clienteNombre }}</span>
+        <button type="button" class="boton-texto" (click)="limpiarSeleccion()">Cambiar</button>
+      </div>
+
+      <div class="lista-devolucion" *ngIf="ventaSeleccionada as venta">
+        <div *ngFor="let detalle of venta.detalles">
+          <span>
+            <b>{{ detalle.productoNombre }}</b>
+            <small>{{ detalle.productoSku }} · Vendido: {{ detalle.cantidad }}</small>
+          </span>
+          <input type="number" min="0" [max]="detalle.cantidad"
+                 [(ngModel)]="cantidades[detalle.productoId]" placeholder="0">
+        </div>
+      </div>
+
+      <label>Motivo
+        <textarea [(ngModel)]="motivo" rows="2" placeholder="Describe la razón de la devolución"></textarea>
+      </label>
+      <button class="boton primario" [disabled]="!ventaId || !motivo.trim()" (click)="guardar()">
+        Aplicar devolución
+      </button>
+    </div>
+  </article>
+
+  <article class="tarjeta">
+    <div class="titulo-tarjeta">
+      <div><h2>Historial de devoluciones</h2><p>Operaciones aplicadas y montos reintegrados.</p></div>
+    </div>
+    <div class="tabla-contenedor"><table>
+      <thead><tr><th>Fecha</th><th>Número</th><th>Venta</th><th>Cliente</th><th>Responsable</th><th>Motivo</th><th>Total</th><th>Estado</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let devolucion of devoluciones">
+          <td>{{ devolucion.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td class="codigo">{{ devolucion.numeroDevolucion }}</td>
+          <td class="codigo">{{ devolucion.numeroVenta }}</td>
+          <td>{{ devolucion.clienteNombre }}</td>
+          <td>{{ devolucion.usuarioNombre }}</td>
+          <td>{{ devolucion.motivo }}</td>
+          <td><b>{{ devolucion.total | moneda }}</b></td>
+          <td><span class="estado exitoso">{{ devolucion.estado }}</span></td>
+        </tr>
+        <tr *ngIf="!devoluciones.length"><td colspan="8" class="sin-datos">No hay devoluciones registradas.</td></tr>
+      </tbody>
+    </table></div>
+  </article>
+
+  <div class="fondo-escaner" *ngIf="escaneando" (click)="detenerEscaner()">
+    <div class="modal-escaner" (click)="$event.stopPropagation()">
+      <header>
+        <div><p class="sobretitulo">CÁMARA</p><h2>Escanear QR de la boleta</h2></div>
+        <button type="button" (click)="detenerEscaner()" aria-label="Cerrar">×</button>
+      </header>
+      <div class="visor-escaner">
+        <video id="visor-escaner-devolucion" autoplay muted playsinline></video>
+        <div class="marco-escaner"><span></span><p>Ubica el QR de la boleta dentro del marco</p></div>
+      </div>
+      <footer><button type="button" class="boton secundario" (click)="detenerEscaner()">Cancelar escaneo</button></footer>
+    </div>
+  </div>
+
+  <div class="fondo-aviso-plazo" *ngIf="ventaFueraPlazo as venta" (click)="cerrarAvisoPlazo()">
+    <article class="modal-aviso-plazo" role="alertdialog" aria-modal="true"
+             aria-labelledby="titulo-aviso-plazo" (click)="$event.stopPropagation()">
+      <div class="icono-aviso-plazo" aria-hidden="true">!</div>
+      <p class="sobretitulo">PLAZO VENCIDO</p>
+      <h2 id="titulo-aviso-plazo">Devolución imposible</h2>
+      <p>Ya pasaron los 7 días permitidos desde esta venta. Por seguridad, el sistema no permite realizar la devolución ni modificar el stock.</p>
+      <div class="detalle-aviso-plazo">
+        <span><small>Comprobante</small><b>{{ venta.comprobante?.numero || venta.numeroVenta }}</b></span>
+        <span><small>Fecha de venta</small><b>{{ venta.fecha | date:'dd/MM/yyyy HH:mm' }}</b></span>
+        <span><small>Fecha límite</small><b>{{ fechaLimiteDevolucion(venta) | date:'dd/MM/yyyy HH:mm' }}</b></span>
+      </div>
+      <button type="button" class="boton primario" (click)="cerrarAvisoPlazo()">Entendido</button>
+    </article>
+  </div>
+</section>

@@ -1,0 +1,27 @@
+<section class="pagina">
+  <header class="encabezado-pagina">
+    <div><p class="sobretitulo">CENTRO DE OPERACIONES</p><h1>Panel principal</h1><p>Visión general de ventas, inventario y abastecimiento.</p></div>
+    <span class="insignia">Actualizado en tiempo real</span>
+  </header>
+  <div class="alerta error" *ngIf="mensajeError">{{ mensajeError }}</div>
+  <div class="cuadricula-indicadores" *ngIf="resumen as r">
+    <article class="indicador"><span class="icono-indicador azul">⚙</span><div><small>Productos activos</small><strong>{{ r.productosActivos }}</strong><em>Referencias disponibles</em></div></article>
+    <article class="indicador"><span class="icono-indicador amarillo">⚠</span><div><small>Bajo stock mínimo</small><strong>{{ r.productosBajoMinimo }}</strong><em>Requieren reposición</em></div></article>
+    <article class="indicador"><span class="icono-indicador verde">S/</span><div><small>Ingresos de hoy</small><strong>{{ r.ingresosDelDia | moneda }}</strong><em>{{ r.ventasDelDia }} ventas registradas</em></div></article>
+    <article class="indicador"><span class="icono-indicador violeta">▦</span><div><small>Unidades en stock</small><strong>{{ r.unidadesEnStock }}</strong><em>Inventario consolidado</em></div></article>
+  </div>
+  <div class="cuadricula-panel">
+    <article class="tarjeta">
+      <div class="titulo-tarjeta"><div><h2>Alertas de inventario</h2><p>Productos en o debajo de su stock mínimo.</p></div><a routerLink="/inventario">Ver movimientos →</a></div>
+      <div class="tabla-contenedor">
+        <table><thead><tr><th>SKU</th><th>Producto</th><th>Tipo</th><th>Stock</th><th>Estado</th></tr></thead>
+        <tbody><tr *ngFor="let producto of productosCriticos"><td class="codigo">{{ producto.sku }}</td><td><b>{{ producto.nombre }}</b><small>{{ producto.marcaNombre }} · {{ producto.modelo }}</small></td><td>{{ producto.tipoProducto }}</td><td><b>{{ producto.stock }}</b> / mín. {{ producto.stockMinimo }}</td><td><span class="estado peligro">Reponer</span></td></tr>
+        <tr *ngIf="!productosCriticos.length"><td colspan="5" class="sin-datos">No hay alertas de stock.</td></tr></tbody></table>
+      </div>
+    </article>
+    <aside class="tarjeta resumen-lateral" *ngIf="resumen as r">
+      <h2>Actividad comercial</h2><div><span>Clientes activos</span><b>{{ r.clientesActivos }}</b></div><div><span>Proveedores activos</span><b>{{ r.proveedoresActivos }}</b></div><div><span>Devoluciones de hoy</span><b>{{ r.devolucionesDelDia }}</b></div>
+      <a class="boton secundario" routerLink="/ventas">Ir a ventas</a>
+    </aside>
+  </div>
+</section>

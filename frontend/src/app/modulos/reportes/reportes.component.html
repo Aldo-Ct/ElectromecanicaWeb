@@ -1,0 +1,11 @@
+<section class="pagina">
+  <header class="encabezado-pagina"><div><p class="sobretitulo">ANÁLISIS OPERATIVO</p><h1>Reportes</h1><p>Indicadores consolidados para la toma de decisiones.</p></div><button class="boton secundario" onclick="window.print()">Imprimir reporte</button></header>
+  <div class="alerta error" *ngIf="mensajeError">{{ mensajeError }}</div>
+  <div class="cuadricula-indicadores" *ngIf="resumen as r">
+    <article class="indicador"><span class="icono-indicador verde">S/</span><div><small>Ingresos del día</small><strong>{{ r.ingresosDelDia | moneda }}</strong><em>{{ r.ventasDelDia }} operaciones</em></div></article>
+    <article class="indicador"><span class="icono-indicador azul">▦</span><div><small>Inventario total</small><strong>{{ r.unidadesEnStock }}</strong><em>{{ r.productosActivos }} referencias activas</em></div></article>
+    <article class="indicador"><span class="icono-indicador amarillo">⚠</span><div><small>Reposición requerida</small><strong>{{ r.productosBajoMinimo }}</strong><em>Productos bajo mínimo</em></div></article>
+    <article class="indicador"><span class="icono-indicador violeta">◎</span><div><small>Red comercial</small><strong>{{ r.clientesActivos }}</strong><em>{{ r.proveedoresActivos }} proveedores</em></div></article>
+  </div>
+  <article class="tarjeta bloque-reporte" *ngIf="resumen as r"><div><p class="sobretitulo">RESUMEN DEL DÍA</p><h2>Operación electromecánica</h2><p>El sistema registra {{ r.ventasDelDia }} ventas y {{ r.devolucionesDelDia }} devoluciones durante la jornada. El inventario disponible suma {{ r.unidadesEnStock }} unidades.</p></div><div class="medidor"><span [style.width.%]="r.productosActivos ? ((r.productosActivos-r.productosBajoMinimo)/r.productosActivos)*100 : 100"></span></div><small>Salud del inventario según niveles mínimos</small></article>
+</section>

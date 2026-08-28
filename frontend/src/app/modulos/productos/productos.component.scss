@@ -1,0 +1,20 @@
+.aviso-precio { margin: -.25rem 0 1rem; padding: .75rem .85rem; border: 1px solid #cfe2f3; border-radius: 9px; color: #315b7d; background: #f1f8fe; font-size: .68rem; line-height: 1.5; }
+label small { display: inline; margin-left: .3rem; color: #687b8f; font-size: .58rem; font-weight: 600; }
+.acciones .qr { color: #126341; border-color: #b9dfcd; background: #ebf8f1; }
+.fondo-etiqueta { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 1rem; background: rgba(3,14,28,.82); backdrop-filter: blur(4px); }
+.modal-etiqueta { width: min(520px, 100%); overflow: hidden; border-radius: 16px; background: #fff; box-shadow: 0 24px 70px rgba(0,0,0,.4); }
+.modal-etiqueta header, .modal-etiqueta footer { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: 1rem 1.2rem; }
+.modal-etiqueta header { border-bottom: 1px solid #e5ecf2; }
+.modal-etiqueta header h2 { margin: .2rem 0 0; font-size: 1rem; }
+.modal-etiqueta header > button { width: 34px; height: 34px; border: 0; border-radius: 50%; color: #586c82; background: #edf2f6; font-size: 1.25rem; cursor: pointer; }
+.modal-etiqueta footer { justify-content: center; border-top: 1px solid #e5ecf2; }
+.vista-etiqueta { display: grid; justify-items: center; width: 320px; max-width: calc(100% - 2rem); margin: 1.2rem auto .75rem; padding: 1rem; border: 2px solid #172b4d; border-radius: 14px; text-align: center; }
+.marca-etiqueta { margin: 0; color: #176aad; font-size: .65rem; font-weight: 900; letter-spacing: .12em; }
+.vista-etiqueta h3 { margin: .5rem 0 .15rem; font-size: 1rem; }
+.vista-etiqueta code { color: #334e68; font-weight: 800; }
+.vista-etiqueta img { width: 230px; height: 230px; margin: .25rem 0; }
+.vista-etiqueta strong { margin-top: .4rem; font-size: 1.3rem; }
+.vista-etiqueta > small { color: #66788a; }
+.codigo-fabricante { margin: 0; font-family: monospace; font-size: .68rem; }
+.explicacion-qr { margin: 0; padding: 0 1.2rem 1rem; color: #60758a; font-size: .7rem; line-height: 1.5; text-align: center; }
+@media(max-width: 560px) { .modal-etiqueta footer { flex-direction: column; }.modal-etiqueta footer .boton { width: 100%; }.vista-etiqueta img { width: 205px; height: 205px; } }

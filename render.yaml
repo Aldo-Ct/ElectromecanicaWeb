@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: electromecanica-backend
+    env: java
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar target/electromecanica-backend-*.jar
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_USERNAME
+        sync: false
+      - key: DATABASE_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ELECTROMECANICA_DEFAULT_PASSWORD
+        sync: false
+      - key: PORT
+        value: 8080
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+      - key: DDL_AUTO
+        value: update
+      - key: SHOW_SQL
+        value: false

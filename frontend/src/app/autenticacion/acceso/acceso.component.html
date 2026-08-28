@@ -1,0 +1,46 @@
+<main class="pagina-acceso">
+  <section class="acceso-presentacion">
+    <div class="marca-grande"><span>⚡</span> Electromecánica</div>
+    <div class="mensaje-presentacion">
+      <p class="sobretitulo">OPERACIÓN INDUSTRIAL CONECTADA</p>
+      <h1>Equipos en movimiento.<br><strong>Negocio bajo control.</strong></h1>
+      <p>Ventas, inventario, almacén y trazabilidad para equipos eléctricos y mecánicos en un solo sistema.</p>
+    </div>
+    <div class="beneficios-acceso">
+      <span>✓ Stock actualizado en tiempo real</span>
+      <span>✓ Ventas y comprobantes en PDF</span>
+      <span>✓ Trazabilidad de cada operación</span>
+    </div>
+  </section>
+
+  <section class="acceso-formulario">
+    <div class="tarjeta-acceso">
+      <div class="marca-movil">⚡ Electromecánica</div>
+      <p class="sobretitulo">ACCESO DEL PERSONAL</p>
+      <h2>Bienvenido</h2>
+      <p class="texto-secundario">Ingresa tus credenciales para continuar.</p>
+
+      <form [formGroup]="formulario" (ngSubmit)="acceder()">
+        <label>Correo corporativo
+          <input type="email" formControlName="correo" placeholder="nombre@electromecanica.pe" autocomplete="username">
+        </label>
+        <small *ngIf="formulario.controls['correo'].touched && formulario.controls['correo'].invalid">Ingresa un correo válido.</small>
+
+        <label>Contraseña
+          <div class="campo-contrasena">
+            <input [type]="mostrarContrasena ? 'text' : 'password'" formControlName="contrasena"
+                   placeholder="Tu contraseña" autocomplete="current-password">
+            <button type="button" (click)="mostrarContrasena = !mostrarContrasena">{{ mostrarContrasena ? 'Ocultar' : 'Ver' }}</button>
+          </div>
+        </label>
+        <small *ngIf="formulario.controls['contrasena'].touched && formulario.controls['contrasena'].invalid">Ingresa tu contraseña.</small>
+
+        <div class="alerta error" *ngIf="mensajeError">{{ mensajeError }}</div>
+        <button class="boton primario boton-acceso" type="submit" [disabled]="procesando">
+          {{ procesando ? 'Validando acceso…' : 'Ingresar al sistema' }}
+        </button>
+      </form>
+      <p class="ayuda-acceso">Las contraseñas se almacenan de forma segura mediante BCrypt.</p>
+    </div>
+  </section>
+</main>

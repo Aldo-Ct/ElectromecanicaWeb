@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: electromecanica-db
+    restart: always
+    environment:
+      POSTGRES_DB: electromecanica_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      TZ: America/Lima
+    ports:
+      - "5432:5432"
+    volumes:
+      - electromecanica_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d electromecanica_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: .
+    container_name: electromecanica-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/electromecanica_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      ELECTROMECANICA_DEFAULT_PASSWORD: ${ELECTROMECANICA_DEFAULT_PASSWORD:-password123}
+      TZ: America/Lima
+
+volumes:
+  electromecanica_postgres_data:

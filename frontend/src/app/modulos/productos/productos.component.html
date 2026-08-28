@@ -1,0 +1,77 @@
+<section class="pagina">
+  <header class="encabezado-pagina"><div><p class="sobretitulo">CATÁLOGO TÉCNICO</p><h1>Productos</h1><p>Equipos, componentes y repuestos eléctricos y mecánicos.</p></div><span class="insignia">{{ productos.length }} referencias</span></header>
+  <div class="alerta exito" *ngIf="mensaje">{{ mensaje }}</div><div class="alerta error" *ngIf="mensajeError">{{ mensajeError }}</div>
+
+  <div class="distribucion-formulario" [class.solo-tabla]="!puedeEditar">
+    <article class="tarjeta panel-formulario" *ngIf="puedeEditar">
+      <div class="titulo-tarjeta"><div><p class="sobretitulo">{{ editandoId ? 'EDICIÓN' : 'NUEVA REFERENCIA' }}</p><h2>{{ editandoId ? 'Actualizar producto' : 'Registrar producto' }}</h2></div><button class="boton-texto" *ngIf="editandoId" (click)="cancelar()">Cancelar</button></div>
+      <form #formulario="ngForm" (ngSubmit)="guardar()">
+        <div class="grupo-campos tres">
+          <label>SKU<input name="sku" [(ngModel)]="producto.sku" required placeholder="MOT-WEG-3HP"></label>
+          <label>Código de barras<input name="codigoBarras" [(ngModel)]="producto.codigoBarras" maxlength="120" placeholder="Opcional · código del fabricante"></label>
+          <label>Modelo<input name="modelo" [(ngModel)]="producto.modelo" placeholder="W22"></label>
+        </div>
+        <label>Nombre<input name="nombre" [(ngModel)]="producto.nombre" required placeholder="Motor eléctrico trifásico"></label>
+        <label>Descripción<textarea name="descripcion" [(ngModel)]="producto.descripcion" rows="2" placeholder="Aplicación, características principales…"></textarea></label>
+        <div class="grupo-campos dos">
+          <label>Categoría<select name="categoria" [(ngModel)]="producto.categoriaId" required><option [ngValue]="0" disabled>Selecciona</option><option *ngFor="let c of categorias" [ngValue]="c.id">{{ c.nombre }}</option></select></label>
+          <label>Marca<select name="marca" [(ngModel)]="producto.marcaId" required><option [ngValue]="0" disabled>Selecciona</option><option *ngFor="let m of marcas" [ngValue]="m.id">{{ m.nombre }}</option></select></label>
+        </div>
+        <div class="grupo-campos dos">
+          <label>Tipo<select name="tipo" [(ngModel)]="producto.tipoProducto"><option value="ELECTRICO">Eléctrico</option><option value="MECANICO">Mecánico</option><option value="OTRO">Otro</option></select></label>
+          <label>Unidad<select name="unidad" [(ngModel)]="producto.unidadMedida"><option value="UNIDAD">Unidad</option><option value="METRO">Metro</option><option value="KILOGRAMO">Kilogramo</option><option value="LITRO">Litro</option><option value="JUEGO">Juego</option><option value="CAJA">Caja</option></select></label>
+        </div>
+        <div class="grupo-campos tres">
+          <label>Precio de compra final <small>IGV incluido</small><div class="entrada-moneda"><span>S/</span><input name="precioCompra" type="number" min="0" step="0.01" [(ngModel)]="producto.precioCompra" required></div></label>
+          <label>Precio de venta final <small>IGV incluido</small><div class="entrada-moneda"><span>S/</span><input name="precioVenta" type="number" min="0.01" step="0.01" [(ngModel)]="producto.precioVenta" required></div></label>
+          <label>Stock mínimo<input name="stockMinimo" type="number" min="0" [(ngModel)]="producto.stockMinimo" required></label>
+        </div>
+        <div class="aviso-precio">Registra el importe que pagará el cliente. El sistema separará automáticamente el valor sin IGV y el IGV incluido al emitir la venta.</div>
+        <label *ngIf="!editandoId">Stock inicial<input name="stock" type="number" min="0" [(ngModel)]="producto.stock"></label>
+        <div class="separador-formulario"><span>Especificaciones {{ producto.tipoProducto === 'ELECTRICO' ? 'eléctricas' : 'mecánicas' }}</span></div>
+        <div class="grupo-campos tres" *ngIf="producto.tipoProducto === 'ELECTRICO'">
+          <label>Voltaje<input name="voltaje" [(ngModel)]="producto.especificacion!.voltaje" placeholder="220/380 V"></label>
+          <label>Corriente<input name="corriente" [(ngModel)]="producto.especificacion!.corriente" placeholder="18 A"></label>
+          <label>Potencia<input name="potencia" [(ngModel)]="producto.especificacion!.potencia" placeholder="3 HP"></label>
+          <label>Frecuencia<input name="frecuencia" [(ngModel)]="producto.especificacion!.frecuencia" placeholder="60 Hz"></label>
+          <label>Fases<input name="fases" type="number" [(ngModel)]="producto.especificacion!.fases"></label>
+          <label>Protección<input name="proteccion" [(ngModel)]="producto.especificacion!.gradoProteccion" placeholder="IP55"></label>
+        </div>
+        <div class="grupo-campos tres" *ngIf="producto.tipoProducto === 'MECANICO'">
+          <label>Material<input name="material" [(ngModel)]="producto.especificacion!.material"></label>
+          <label>Dimensiones<input name="dimensiones" [(ngModel)]="producto.especificacion!.dimensiones"></label>
+          <label>Peso (kg)<input name="peso" type="number" step="0.001" [(ngModel)]="producto.especificacion!.peso"></label>
+          <label>Diámetro<input name="diametro" [(ngModel)]="producto.especificacion!.diametro"></label>
+          <label>Capacidad<input name="capacidad" [(ngModel)]="producto.especificacion!.capacidad"></label>
+          <label>Velocidad<input name="velocidad" [(ngModel)]="producto.especificacion!.velocidad"></label>
+        </div>
+        <div class="grupo-campos dos"><label>Garantía<input name="garantia" [(ngModel)]="producto.garantia"></label><label>Ficha técnica (URL)<input name="ficha" type="url" [(ngModel)]="producto.fichaTecnicaUrl"></label></div>
+        <button class="boton primario ancho" [disabled]="formulario.invalid || !producto.categoriaId || !producto.marcaId || guardando">{{ guardando ? 'Guardando…' : (editandoId ? 'Actualizar producto' : 'Crear producto') }}</button>
+      </form>
+    </article>
+
+    <article class="tarjeta">
+      <div class="barra-herramientas"><div><h2>Catálogo</h2><p>Precios finales con IGV, stock y etiquetas.</p></div><div class="busqueda"><input [(ngModel)]="buscar" (keyup.enter)="cargar()" placeholder="Buscar por SKU, código, nombre o modelo"><button (click)="cargar()">Buscar</button></div></div>
+      <div class="tabla-contenedor"><table><thead><tr><th>Producto</th><th>Clasificación</th><th>Compra final</th><th>Venta final</th><th>Stock actual</th><th>Estado</th><th *ngIf="puedeEditar"></th></tr></thead>
+      <tbody><tr *ngFor="let p of productos"><td><b>{{ p.nombre }}</b><small class="codigo">{{ p.sku }} · {{ p.marcaNombre }} {{ p.modelo }}</small><small *ngIf="p.codigoBarras">Cód. barras: {{ p.codigoBarras }}</small></td><td><span class="estado neutro">{{ p.tipoProducto }}</span><small>{{ p.categoriaNombre }}</small></td><td>{{ p.precioCompra | moneda }}<small>Incluye IGV</small></td><td><b>{{ p.precioVenta | moneda }}</b><small>Incluye IGV</small></td><td><b [class.texto-peligro]="p.stock <= p.stockMinimo">{{ p.stock }}</b><small>Mín. {{ p.stockMinimo }}</small></td><td><span class="estado" [class.exitoso]="p.activo" [class.inactivo]="!p.activo">{{ p.activo ? 'Activo' : 'Inactivo' }}</span></td><td *ngIf="puedeEditar" class="acciones"><button type="button" class="qr" (click)="abrirEtiqueta(p)">QR</button><button type="button" (click)="editar(p)">Editar</button><button type="button" class="peligro" *ngIf="p.activo" (click)="desactivar(p)">Desactivar</button></td></tr>
+      <tr *ngIf="!productos.length"><td colspan="7" class="sin-datos">No se encontraron productos.</td></tr></tbody></table></div>
+    </article>
+  </div>
+
+  <div class="fondo-etiqueta" *ngIf="productoEtiqueta as etiqueta" (click)="cerrarEtiqueta()">
+    <article class="modal-etiqueta" (click)="$event.stopPropagation()">
+      <header><div><p class="sobretitulo">ETIQUETA DEL PRODUCTO</p><h2>QR generado automáticamente</h2></div><button type="button" (click)="cerrarEtiqueta()" aria-label="Cerrar">×</button></header>
+      <div class="vista-etiqueta">
+        <p class="marca-etiqueta">ELECTROMECÁNICA</p>
+        <h3>{{ etiqueta.nombre }}</h3>
+        <code>{{ etiqueta.sku }}</code>
+        <img *ngIf="urlQr" [src]="urlQr" [alt]="'QR de ' + etiqueta.sku">
+        <p *ngIf="etiqueta.codigoBarras" class="codigo-fabricante">Código del fabricante: {{ etiqueta.codigoBarras }}</p>
+        <strong>{{ etiqueta.precioVenta | moneda }}</strong>
+        <small>Precio final con IGV incluido</small>
+      </div>
+      <p class="explicacion-qr">Este QR contiene el SKU <b>{{ etiqueta.sku }}</b>. Al escanearlo en Ventas, el producto se agrega automáticamente.</p>
+      <footer><button type="button" class="boton secundario" (click)="descargarQr()">Descargar QR</button><button type="button" class="boton primario" (click)="imprimirEtiqueta()">Imprimir etiqueta</button></footer>
+    </article>
+  </div>
+</section>

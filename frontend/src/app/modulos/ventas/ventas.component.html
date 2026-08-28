@@ -1,0 +1,195 @@
+<section class="pagina ventas-pagina">
+  <header class="encabezado-pagina">
+    <div>
+      <p class="sobretitulo">OPERACIÓN COMERCIAL</p>
+      <h1>Ventas</h1>
+      <p>Los precios ya incluyen IGV. Puedes acordar el precio final con el cliente y cobrar con vuelto automático.</p>
+    </div>
+    <span class="insignia">{{ ventas.length }} operaciones</span>
+  </header>
+
+  <div class="alerta exito" *ngIf="mensaje">{{ mensaje }}</div>
+  <div class="alerta error" *ngIf="mensajeError">{{ mensajeError }}</div>
+
+  <div class="distribucion-venta venta-amigable" *ngIf="puedeVender">
+    <div class="columna-venta">
+      <article class="tarjeta">
+        <div class="titulo-tarjeta">
+          <div>
+            <p class="sobretitulo">PASO 1</p>
+            <h2>Cliente y comprobante</h2>
+          </div>
+        </div>
+        <div class="grupo-campos dos">
+          <label>Cliente
+            <select [(ngModel)]="venta.clienteId">
+              <option [ngValue]="0" disabled>Selecciona un cliente</option>
+              <option *ngFor="let cliente of clientes" [ngValue]="cliente.id">
+                {{ cliente.numeroDocumento }} · {{ cliente.nombreCompleto }}
+              </option>
+            </select>
+          </label>
+          <label>Tipo de comprobante
+            <select [(ngModel)]="venta.tipoComprobante">
+              <option value="BOLETA">Boleta</option>
+              <option value="FACTURA">Factura</option>
+            </select>
+          </label>
+        </div>
+      </article>
+
+      <article class="tarjeta">
+        <div class="titulo-tarjeta">
+          <div>
+            <p class="sobretitulo">PASO 2</p>
+            <h2>Agregar productos</h2>
+            <p>Escanea el QR interno, el código de barras registrado o escribe el SKU.</p>
+          </div>
+        </div>
+
+        <div class="entrada-escaner">
+          <label>Código QR, código de barras o SKU
+            <div class="control-codigo">
+              <input [(ngModel)]="codigoProducto" (keyup.enter)="procesarCodigo()"
+                     placeholder="Ej.: MOT-WEG-001" autocomplete="off">
+              <button type="button" class="boton secundario" (click)="iniciarEscaner()" title="Abrir cámara">
+                <span aria-hidden="true">▣</span> Escanear
+              </button>
+              <button type="button" class="boton primario" (click)="procesarCodigo()">Agregar</button>
+            </div>
+          </label>
+          <small *ngIf="!hayCamara">También puedes escribir o pegar el SKU o código de barras y presionar Enter.</small>
+        </div>
+
+        <div class="separador-con-texto"><span>o selección manual</span></div>
+
+        <div class="agregar-producto">
+          <select [(ngModel)]="productoSeleccionado">
+            <option [ngValue]="0" disabled>Selecciona un producto</option>
+            <option *ngFor="let producto of productos" [ngValue]="producto.id">
+              {{ producto.sku }} · {{ producto.nombre }} — {{ producto.precioVenta | moneda }} final (stock actual: {{ producto.stock }})
+            </option>
+          </select>
+          <input type="number" min="1" [(ngModel)]="cantidad" aria-label="Cantidad">
+          <button class="boton secundario" (click)="agregarProducto()">Agregar</button>
+        </div>
+
+        <div class="carrito" *ngIf="venta.detalles.length; else carritoVacio">
+          <div class="cabecera-carrito">
+            <span>Producto y lista</span><span>Cantidad</span><span>Precio final acordado</span><span>Importe</span><span></span>
+          </div>
+          <div class="detalle-carrito" *ngFor="let detalle of venta.detalles">
+            <div>
+              <b>{{ detalle.productoNombre }}</b>
+              <small>{{ detalle.productoSku }} · Lista: {{ detalle.precioLista | moneda }} c/u, IGV incluido</small>
+            </div>
+            <input class="cantidad-carrito" type="number" min="1" [ngModel]="detalle.cantidad"
+                   (ngModelChange)="actualizarCantidad(detalle, $event)" aria-label="Cantidad del producto">
+            <div class="precio-acordado">
+              <div class="entrada-moneda"><span>S/</span><input type="number" min="0.01" step="0.01" [ngModel]="detalle.precioUnitario" (ngModelChange)="actualizarPrecioAcordado(detalle, $event)" aria-label="Precio final acordado"></div>
+              <button type="button" *ngIf="detalle.precioUnitario !== detalle.precioLista" (click)="restaurarPrecioLista(detalle)">Usar lista</button>
+            </div>
+            <strong>{{ detalle.cantidad * detalle.precioUnitario | moneda }}</strong>
+            <button type="button" (click)="quitar(detalle)" title="Quitar producto" aria-label="Quitar producto">×</button>
+          </div>
+        </div>
+        <ng-template #carritoVacio>
+          <div class="carrito-vacio"><span>▦</span><b>Aún no hay productos</b><small>Escanea un código o selecciona un producto para comenzar.</small></div>
+        </ng-template>
+      </article>
+
+      <article class="tarjeta">
+        <div class="titulo-tarjeta">
+          <div><p class="sobretitulo">PASO 3</p><h2>Forma de pago</h2></div>
+        </div>
+        <div class="grupo-campos dos">
+          <label>Método de pago
+            <select [(ngModel)]="venta.metodoPago" (ngModelChange)="cambiarMetodoPago()">
+              <option value="EFECTIVO">Efectivo</option>
+              <option value="TARJETA">Tarjeta</option>
+              <option value="TRANSFERENCIA">Transferencia bancaria</option>
+              <option value="BILLETERA_DIGITAL">Yape / Plin</option>
+              <option value="CREDITO">Crédito</option>
+            </select>
+          </label>
+          <label>Observaciones
+            <input [(ngModel)]="venta.observaciones" placeholder="Opcional">
+          </label>
+        </div>
+
+        <div class="pago-efectivo" *ngIf="venta.metodoPago === 'EFECTIVO'">
+          <div class="campo-recibido">
+            <label>Monto recibido
+              <div class="entrada-moneda"><span>S/</span><input type="number" min="0" step="0.10" [(ngModel)]="venta.montoRecibido"></div>
+            </label>
+            <button type="button" class="boton secundario" (click)="pagoExacto()">Pago exacto</button>
+          </div>
+          <div class="montos-rapidos" *ngIf="total > 0">
+            <button type="button" *ngFor="let monto of opcionesEfectivo" (click)="usarMonto(monto)">{{ monto | moneda }}</button>
+          </div>
+          <div class="resultado-vuelto" [class.pendiente]="faltante > 0" [class.listo]="faltante === 0 && total > 0">
+            <div *ngIf="faltante > 0"><span>Falta recibir</span><strong>{{ faltante | moneda }}</strong></div>
+            <div *ngIf="faltante === 0"><span>Vuelto para el cliente</span><strong>{{ vuelto | moneda }}</strong></div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <aside class="tarjeta resumen-venta resumen-cobro">
+      <p class="sobretitulo">RESUMEN DEL COBRO</p>
+      <h2>Revisa antes de confirmar</h2>
+      <div><span>Precios de lista</span><b>{{ importeLista | moneda }}</b></div>
+      <div class="fila-ahorro" *ngIf="ahorroNegociacion > 0"><span>Ahorro por negociación</span><b>− {{ ahorroNegociacion | moneda }}</b></div>
+      <div><span>Productos al precio acordado</span><b>{{ importeProductos | moneda }}</b></div>
+      <label>Descuento adicional <small>Opcional, aplicado después de negociar</small>
+        <div class="entrada-moneda"><span>S/</span><input type="number" min="0" [max]="importeProductos" step="0.01" [(ngModel)]="venta.descuento"></div>
+      </label>
+      <p class="ayuda-error" *ngIf="descuentoAdicional > importeProductos">El descuento adicional no puede superar el importe acordado.</p>
+      <div class="separacion-igv"><span>Valor de venta sin IGV</span><b>{{ baseImponible | moneda }}</b></div>
+      <div><span>IGV incluido (18%)</span><b>{{ igv | moneda }}</b></div>
+      <div class="total-venta"><span>Precio final a cobrar</span><strong>{{ total | moneda }}</strong></div>
+      <div class="mini-vuelto" *ngIf="venta.metodoPago === 'EFECTIVO' && pagoValido">
+        <span>Vuelto</span><b>{{ vuelto | moneda }}</b>
+      </div>
+      <button class="boton primario ancho boton-confirmar" [disabled]="!puedeConfirmar" (click)="guardar()">
+        {{ procesando ? 'Registrando venta…' : 'Confirmar, registrar y descargar' }}
+      </button>
+      <small *ngIf="!venta.clienteId">Selecciona un cliente para continuar.</small>
+      <small *ngIf="venta.clienteId && !venta.detalles.length">Agrega al menos un producto.</small>
+      <small *ngIf="venta.clienteId && venta.detalles.length && !pagoValido">El efectivo recibido todavía no cubre el total.</small>
+      <small *ngIf="puedeConfirmar">Se descontará el stock y el comprobante PDF se descargará automáticamente.</small>
+    </aside>
+  </div>
+
+  <article class="tarjeta">
+    <div class="titulo-tarjeta"><div><h2>Historial de ventas</h2><p>Comprobantes y estado de las operaciones.</p></div></div>
+    <div class="tabla-contenedor"><table>
+      <thead><tr><th>Fecha</th><th>Número</th><th>Cliente</th><th>Pago</th><th>Valor sin IGV</th><th>IGV incluido</th><th>Precio final</th><th>Estado</th><th></th></tr></thead>
+      <tbody>
+        <tr *ngFor="let registro of ventas">
+          <td>{{ registro.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td><b class="codigo">{{ registro.numeroVenta }}</b><small>{{ registro.comprobante?.numero }}</small></td>
+          <td>{{ registro.clienteNombre }}<small>{{ registro.vendedorNombre }}</small></td>
+          <td>{{ registro.metodoPago }}<small *ngIf="registro.metodoPago === 'EFECTIVO'">Vuelto: {{ registro.vuelto | moneda }}</small></td>
+          <td>{{ registro.subtotal | moneda }}</td>
+          <td>{{ registro.impuesto | moneda }}</td>
+          <td><b>{{ registro.total | moneda }}</b><small *ngIf="registro.descuentoNegociacion > 0">Negociado: − {{ registro.descuentoNegociacion | moneda }}</small></td>
+          <td><span class="estado" [class.exitoso]="registro.estado === 'COMPLETADA'" [class.peligro]="registro.estado === 'ANULADA'" [class.neutro]="registro.estado.includes('DEVUELTA')">{{ registro.estado }}</span></td>
+          <td class="acciones"><button (click)="descargar(registro)">PDF</button></td>
+        </tr>
+        <tr *ngIf="!ventas.length"><td colspan="9" class="sin-datos">No hay ventas registradas.</td></tr>
+      </tbody>
+    </table></div>
+  </article>
+
+  <div class="fondo-escaner" *ngIf="escaneando" (click)="detenerEscaner()">
+    <div class="modal-escaner" (click)="$event.stopPropagation()">
+      <header><div><p class="sobretitulo">CÁMARA</p><h2>Escanear código</h2></div><button type="button" (click)="detenerEscaner()" aria-label="Cerrar">×</button></header>
+      <div class="visor-escaner">
+        <video id="visor-escaner" autoplay muted playsinline></video>
+        <div class="marco-escaner"><span></span><p>Ubica el QR o código dentro del marco</p></div>
+      </div>
+      <footer><button type="button" class="boton secundario" (click)="detenerEscaner()">Cancelar escaneo</button></footer>
+    </div>
+  </div>
+</section>
