@@ -18,6 +18,11 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
     @Query("select p from Producto p join fetch p.categoria join fetch p.marca left join fetch p.especificacion order by p.nombre")
     List<Producto> listarCompletos();
 
+    @Query("select p from Producto p join fetch p.categoria join fetch p.marca left join fetch p.especificacion " +
+            "where p.activo = true and p.publicadoVenta = true and p.categoria.activo = true and p.marca.activo = true " +
+            "order by p.nombre")
+    List<Producto> listarPublicados();
+
     @Query("select distinct p from Producto p join fetch p.categoria join fetch p.marca left join fetch p.especificacion " +
             "where lower(p.nombre) like lower(concat('%', :termino, '%')) " +
             "or lower(p.sku) like lower(concat('%', :termino, '%')) " +

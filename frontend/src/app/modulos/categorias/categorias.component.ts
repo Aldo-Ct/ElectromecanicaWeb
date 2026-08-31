@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Categoria } from '../../modelos/dominio.model';
 import { CatalogoService } from '../../servicios/catalogo.service';
 
-@Component({ selector: 'app-categorias', templateUrl: './categorias.component.html' })
+@Component({
+    selector: 'app-categorias', templateUrl: './categorias.component.html',
+    standalone: false
+})
 export class CategoriasComponent implements OnInit {
   categorias: Categoria[] = [];
   categoria: Categoria = { nombre: '', descripcion: '', activo: true };

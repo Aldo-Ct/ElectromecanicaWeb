@@ -30,6 +30,7 @@ public record ProductoDTO(
         String fichaTecnicaUrl,
         String garantia,
         Boolean activo,
+        Boolean publicadoVenta,
         LocalDateTime fechaCreacion,
         LocalDateTime fechaActualizacion,
         EspecificacionProductoDTO especificacion

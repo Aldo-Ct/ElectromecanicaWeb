@@ -13,4 +13,7 @@ export class UsuarioService {
   cambiarEstado(id: number, activo: boolean): Observable<Usuario> {
     return this.api.actualizar<Usuario>(`/usuarios/${id}/estado`, { activo });
   }
+  cambiarContrasena(contrasenaActual: string, contrasenaNueva: string): Observable<void> {
+    return this.api.actualizar<void>('/usuarios/contrasena', { contrasenaActual, contrasenaNueva });
+  }
 }

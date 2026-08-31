@@ -1,0 +1,269 @@
+<main class="sitio-publico" [style.--movimiento-hero]="movimientoHero + 'px'">
+  <a class="saltar-contenido" href="#contenido-publico">Saltar al contenido</a>
+  <div class="progreso-scroll" [style.width.%]="progresoScroll" aria-hidden="true"></div>
+
+  <header class="cabecera-publica" [class.compacta]="cabeceraCompacta">
+    <a class="marca-publica" routerLink="/" aria-label="Electromecánica, ir al inicio">
+      <span class="marca-icono" aria-hidden="true">ϟ</span>
+      <span><strong>Electromecánica</strong><small>SUMINISTRO INDUSTRIAL</small></span>
+    </a>
+
+    <button class="boton-menu-publico" type="button" (click)="menuAbierto = !menuAbierto"
+            [attr.aria-expanded]="menuAbierto" aria-controls="navegacion-publica"
+            [attr.aria-label]="menuAbierto ? 'Cerrar menú de navegación' : 'Abrir menú de navegación'">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="navegacion-publica" class="navegacion-publica" [class.abierta]="menuAbierto"
+         aria-label="Navegación principal">
+      <a href="#inicio" (click)="cerrarMenu()">Inicio</a>
+      <a href="#soluciones" (click)="cerrarMenu()">Soluciones</a>
+      <a routerLink="/catalogo" (click)="cerrarMenu()">Catálogo</a>
+      <a href="#proceso" (click)="cerrarMenu()">Cómo trabajamos</a>
+      <a href="#contacto" (click)="cerrarMenu()">Contacto</a>
+      <a class="acceso-restringido" routerLink="/acceso" (click)="cerrarMenu()">
+        <span aria-hidden="true">▣</span> Acceso restringido
+      </a>
+    </nav>
+  </header>
+
+  <section class="hero-publico" id="inicio">
+    <div class="hero-fondo" aria-hidden="true"></div>
+    <div class="hero-trama" aria-hidden="true"></div>
+
+    <div class="hero-contenedor">
+      <div class="hero-contenido">
+        <p class="etiqueta-publica"><span></span> SOLUCIONES PARA LA INDUSTRIA</p>
+        <h1>La energía que mueve <strong>tu operación.</strong></h1>
+        <p class="hero-texto">Equipos eléctricos, componentes mecánicos y abastecimiento organizado para mantener tu negocio siempre en marcha.</p>
+        <div class="hero-acciones">
+          <a class="boton-publico primario" routerLink="/catalogo">Explorar catálogo <span aria-hidden="true">↗</span></a>
+          <a class="boton-publico secundario" href="#contacto">Solicitar atención</a>
+        </div>
+        <div class="hero-sello">
+          <span class="pulso" aria-hidden="true"></span>
+          <p><strong>Atención comercial disponible</strong><small>Cuéntanos qué componente o aplicación buscas.</small></p>
+        </div>
+      </div>
+
+      <aside class="panel-hero" aria-label="Proceso de atención comercial">
+        <div class="panel-hero-superior">
+          <p>CAPACIDAD OPERATIVA</p>
+          <span><i></i> En línea</span>
+        </div>
+        <h2>Del requerimiento al despacho, con información clara.</h2>
+        <div class="flujo-hero">
+          <div><span>01</span><p><strong>Requerimiento</strong><small>Producto, modelo o aplicación</small></p></div>
+          <div><span>02</span><p><strong>Verificación</strong><small>Alternativas y disponibilidad</small></p></div>
+          <div><span>03</span><p><strong>Atención</strong><small>Propuesta y seguimiento</small></p></div>
+        </div>
+        <a href="#contacto">Iniciar una consulta <span aria-hidden="true">→</span></a>
+      </aside>
+    </div>
+
+    <div class="hero-indicadores" aria-label="Características del servicio">
+      <div><span aria-hidden="true">01</span><strong>Catálogo especializado</strong><small>Soluciones eléctricas y mecánicas</small></div>
+      <div><span aria-hidden="true">02</span><strong>Disponibilidad controlada</strong><small>Trazabilidad por producto y lote</small></div>
+      <div><span aria-hidden="true">03</span><strong>Atención documentada</strong><small>Seguimiento ordenado de cada operación</small></div>
+    </div>
+  </section>
+
+  <div id="contenido-publico">
+    <section class="franja-confianza" aria-label="Ventajas de Electromecánica">
+      <div data-reveal="up"><span aria-hidden="true">✓</span><p><strong>Stock actualizado</strong><small>Disponibilidad controlada</small></p></div>
+      <div data-reveal="up"><span aria-hidden="true">✓</span><p><strong>Productos trazables</strong><small>Control por lote y movimiento</small></p></div>
+      <div data-reveal="up"><span aria-hidden="true">✓</span><p><strong>Atención comercial</strong><small>Respuesta para cada requerimiento</small></p></div>
+      <div data-reveal="up"><span aria-hidden="true">✓</span><p><strong>Comprobantes digitales</strong><small>Documentación clara y segura</small></p></div>
+    </section>
+
+    <section class="seccion-publica soluciones-publicas" id="soluciones">
+      <div class="encabezado-seccion-publica" data-reveal="up">
+        <div>
+          <p class="etiqueta-seccion"><span>01</span> NUESTRAS SOLUCIONES</p>
+          <h2>La solución correcta empieza por entender la operación.</h2>
+        </div>
+        <p>Conectamos suministro eléctrico y mecánico con una atención ordenada, desde la identificación del producto hasta su entrega.</p>
+      </div>
+
+      <div class="cuadricula-soluciones">
+        <article class="tarjeta-solucion destacada" data-reveal="up">
+          <div class="icono-solucion" aria-hidden="true">ϟ</div>
+          <p class="numero-solucion">ENERGÍA</p>
+          <h3>Equipamiento eléctrico</h3>
+          <p>Motores, contactores, interruptores, transformadores y variadores para aplicaciones industriales.</p>
+          <a href="#productos" (click)="seleccionarCategoria('electrico')">Explorar soluciones <span aria-hidden="true">→</span></a>
+        </article>
+        <article class="tarjeta-solucion" data-reveal="up">
+          <div class="icono-solucion" aria-hidden="true">⚙</div>
+          <p class="numero-solucion">MOVIMIENTO</p>
+          <h3>Componentes mecánicos</h3>
+          <p>Rodamientos, bombas, reductores, válvulas y elementos para transmisión y mantenimiento.</p>
+          <a href="#productos" (click)="seleccionarCategoria('mecanico')">Ver componentes <span aria-hidden="true">→</span></a>
+        </article>
+        <article class="tarjeta-solucion" data-reveal="up">
+          <div class="icono-solucion" aria-hidden="true">▤</div>
+          <p class="numero-solucion">SUMINISTRO</p>
+          <h3>Abastecimiento controlado</h3>
+          <p>Repuestos y herramientas con información organizada para atender cada requerimiento.</p>
+          <a href="#productos" (click)="seleccionarCategoria('abastecimiento')">Conocer el proceso <span aria-hidden="true">→</span></a>
+        </article>
+      </div>
+    </section>
+
+    <section class="catalogo-publico" id="productos">
+      <div class="contenedor-catalogo">
+        <div class="cabecera-catalogo" data-reveal="up">
+          <div>
+            <p class="etiqueta-seccion clara"><span>02</span> PORTAFOLIO ESPECIALIZADO</p>
+            <h2>Explora nuestro catálogo por aplicación.</h2>
+          </div>
+          <p>Selecciona una categoría para conocer los principales grupos de productos que podemos atender.</p>
+        </div>
+
+        <div class="selector-catalogo" role="tablist" aria-label="Categorías del catálogo" data-reveal="fade">
+          <button *ngFor="let categoria of categorias" type="button" role="tab"
+                  [class.activo]="categoriaActiva === categoria.id"
+                  [attr.aria-selected]="categoriaActiva === categoria.id"
+                  (click)="seleccionarCategoria(categoria.id)">
+            <span>{{ categoria.etiqueta }}</span><i aria-hidden="true">→</i>
+          </button>
+        </div>
+
+        <div class="escaparate-catalogo" [class.cambiando]="catalogoAnimando" aria-live="polite" data-reveal="scale">
+          <div class="imagen-catalogo">
+            <img [src]="categoriaSeleccionada.imagen" [alt]="categoriaSeleccionada.textoAlternativo">
+            <div class="etiqueta-imagen-catalogo"><span>SELECCIÓN ACTUAL</span><strong>{{ categoriaSeleccionada.etiqueta }}</strong></div>
+          </div>
+          <div class="detalle-catalogo">
+            <p class="codigo-catalogo">CAT / {{ categoriaSeleccionada.id | uppercase }}</p>
+            <h3>{{ categoriaSeleccionada.titulo }}</h3>
+            <p>{{ categoriaSeleccionada.descripcion }}</p>
+            <div class="aplicaciones-catalogo">
+              <article *ngFor="let aplicacion of categoriaSeleccionada.aplicaciones; let i = index">
+                <span>0{{ i + 1 }}</span>
+                <div><strong>{{ aplicacion.nombre }}</strong><small>{{ aplicacion.detalle }}</small></div>
+              </article>
+            </div>
+            <a class="boton-publico primario" routerLink="/catalogo">Ver productos disponibles <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion-proceso" id="proceso">
+      <div class="encabezado-proceso" data-reveal="up">
+        <p class="etiqueta-seccion"><span>03</span> CÓMO TRABAJAMOS</p>
+        <h2>Un proceso simple para una necesidad técnica.</h2>
+        <p>Nos enfocamos en recibir información útil, revisar alternativas y mantener claridad durante la atención.</p>
+      </div>
+      <div class="pasos-proceso">
+        <article data-reveal="up">
+          <span class="numero-paso">01</span>
+          <div class="icono-paso" aria-hidden="true">⌁</div>
+          <h3>Cuéntanos el requerimiento</h3>
+          <p>Indica el producto, modelo, especificación o aplicación que necesitas atender.</p>
+        </article>
+        <article data-reveal="up">
+          <span class="numero-paso">02</span>
+          <div class="icono-paso" aria-hidden="true">◎</div>
+          <h3>Revisamos alternativas</h3>
+          <p>Organizamos la información disponible para orientar la consulta comercial.</p>
+        </article>
+        <article data-reveal="up">
+          <span class="numero-paso">03</span>
+          <div class="icono-paso" aria-hidden="true">✓</div>
+          <h3>Coordinamos la atención</h3>
+          <p>Confirmamos los siguientes pasos y mantenemos el pedido documentado.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="seccion-respaldo" id="respaldo">
+      <div class="respaldo-introduccion" data-reveal="left">
+        <p class="etiqueta-seccion clara"><span>04</span> GESTIÓN CON TRAZABILIDAD</p>
+        <h2>Lo que ocurre detrás también importa.</h2>
+        <p>Nuestra plataforma interna conecta inventario, ventas y documentación para mantener un registro ordenado de las operaciones.</p>
+        <div class="acceso-interno-respaldo">
+          <span aria-hidden="true">▣</span>
+          <p><strong>Área exclusiva para el personal</strong><small>Acceso protegido según funciones y responsabilidades.</small></p>
+          <a routerLink="/acceso" aria-label="Ingresar al área restringida">→</a>
+        </div>
+      </div>
+      <div class="cuadricula-respaldo">
+        <article data-reveal="right"><span aria-hidden="true">◎</span><h3>Inventario visible</h3><p>Seguimiento de existencias, ingresos, ajustes y movimientos.</p></article>
+        <article data-reveal="right"><span aria-hidden="true">◇</span><h3>Registro por lote</h3><p>Información organizada para una mejor trazabilidad del producto.</p></article>
+        <article data-reveal="right"><span aria-hidden="true">▣</span><h3>Ventas documentadas</h3><p>Comprobantes digitales y consulta del historial de operaciones.</p></article>
+        <article data-reveal="right"><span aria-hidden="true">✓</span><h3>Control de accesos</h3><p>Área administrativa protegida según las funciones del personal.</p></article>
+      </div>
+    </section>
+
+    <section class="marcas-publicas" aria-label="Marcas presentes en el catálogo">
+      <p>Marcas presentes en nuestro catálogo</p>
+      <div>
+        <span>SIEMENS</span><span>ABB</span><span>SCHNEIDER ELECTRIC</span><span>WEG</span><span>SKF</span><span>BOSCH</span><span>FESTO</span>
+      </div>
+    </section>
+
+    <section class="seccion-contacto" id="contacto">
+      <div class="contacto-introduccion" data-reveal="left">
+        <p class="etiqueta-seccion"><span>05</span> HABLEMOS DE TU REQUERIMIENTO</p>
+        <h2>La consulta comienza con los datos correctos.</h2>
+        <p>Completa la información principal y prepararemos un correo con tu requerimiento para el equipo comercial.</p>
+        <div class="correo-contacto">
+          <span aria-hidden="true">&#64;</span>
+          <p><small>ATENCIÓN COMERCIAL</small><a href="mailto:ventas@electromecanica.pe">ventas&#64;electromecanica.pe</a></p>
+        </div>
+      </div>
+
+      <form class="formulario-contacto" #formularioConsulta="ngForm" (ngSubmit)="enviarConsulta()" data-reveal="right">
+        <div class="fila-formulario">
+          <label>Nombre y apellido
+            <input name="nombreConsulta" [(ngModel)]="consulta.nombre" required placeholder="Tu nombre">
+          </label>
+          <label>Empresa <span>Opcional</span>
+            <input name="empresaConsulta" [(ngModel)]="consulta.empresa" placeholder="Nombre de la empresa">
+          </label>
+        </div>
+        <label>Correo de contacto
+          <input name="correoConsulta" type="email" [(ngModel)]="consulta.correo" required email placeholder="nombre@empresa.com">
+        </label>
+        <label>Producto o aplicación
+          <select name="productoConsulta" [(ngModel)]="consulta.producto" required>
+            <option value="" disabled>Selecciona una categoría</option>
+            <option *ngFor="let categoria of categorias" [value]="categoria.etiqueta">{{ categoria.etiqueta }}</option>
+            <option value="Otro requerimiento">Otro requerimiento</option>
+          </select>
+        </label>
+        <label>Detalle del requerimiento <span>Opcional</span>
+          <textarea name="mensajeConsulta" [(ngModel)]="consulta.mensaje" rows="4"
+                    placeholder="Modelo, potencia, voltaje, medidas, cantidad u otra referencia útil"></textarea>
+        </label>
+        <button class="boton-publico primario boton-enviar" type="submit" [disabled]="formularioConsulta.invalid">
+          Preparar consulta <span aria-hidden="true">↗</span>
+        </button>
+        <p class="nota-formulario">Se abrirá tu aplicación de correo. Este formulario no almacena información en el sitio.</p>
+        <div class="mensaje-formulario" *ngIf="consultaAbierta">La consulta fue preparada en tu aplicación de correo.</div>
+      </form>
+    </section>
+  </div>
+
+  <footer class="pie-publico">
+    <div class="pie-superior">
+      <a class="marca-publica" routerLink="/" aria-label="Electromecánica, ir al inicio">
+        <span class="marca-icono" aria-hidden="true">ϟ</span>
+        <span><strong>Electromecánica</strong><small>SUMINISTRO INDUSTRIAL</small></span>
+      </a>
+      <p>Equipos y componentes para mantener la industria en movimiento.</p>
+      <a class="enlace-acceso-pie" routerLink="/acceso"><span aria-hidden="true">▣</span> Acceso restringido</a>
+    </div>
+    <div class="pie-inferior">
+      <span>© {{ anioActual }} Electromecánica. Todos los derechos reservados.</span>
+      <nav aria-label="Enlaces del pie de página">
+        <a href="#inicio">Inicio</a><a href="#soluciones">Soluciones</a><a routerLink="/catalogo">Catálogo</a><a href="#contacto">Contacto</a>
+      </nav>
+    </div>
+  </footer>
+
+  <button class="volver-arriba" type="button" *ngIf="mostrarVolverArriba" (click)="volverArriba()"
+          aria-label="Volver al inicio">↑</button>
+</main>

@@ -24,4 +24,6 @@ small { color: #b42318; }
 .boton-acceso { width: 100%; height: 54px; margin-top: .65rem; }
 .ayuda-acceso { margin-top: 1.5rem; color: #8492a6; font-size: .74rem; text-align: center; }
 .marca-movil { display: none; margin-bottom: 2rem; color: #10243e; font-size: 1.2rem; font-weight: 800; }
+.volver-sitio { display: inline-block; margin-bottom: 1.8rem; color: #276fa9; font-size: .72rem; font-weight: 800; text-decoration: none; }
+.volver-sitio:hover { text-decoration: underline; }
 @media(max-width:850px){.pagina-acceso{display:block}.acceso-presentacion{display:none}.acceso-formulario{min-height:100vh;padding:1.5rem}.marca-movil{display:block}}

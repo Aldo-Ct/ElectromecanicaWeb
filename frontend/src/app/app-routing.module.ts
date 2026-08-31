@@ -18,8 +18,12 @@ import { ProveedoresComponent } from './modulos/proveedores/proveedores.componen
 import { ReportesComponent } from './modulos/reportes/reportes.component';
 import { UsuariosComponent } from './modulos/usuarios/usuarios.component';
 import { VentasComponent } from './modulos/ventas/ventas.component';
+import { PaginaPublicaComponent } from './publico/pagina-publica/pagina-publica.component';
+import { CatalogoProductosComponent } from './publico/catalogo-productos/catalogo-productos.component';
 
 const rutas: Routes = [
+  { path: '', component: PaginaPublicaComponent, pathMatch: 'full' },
+  { path: 'catalogo', component: CatalogoProductosComponent },
   { path: 'acceso', component: AccesoComponent },
   {
     path: '', component: EstructuraAdministrativaComponent, canActivate: [GuardiaAutenticacion],
@@ -40,7 +44,7 @@ const rutas: Routes = [
       { path: '', redirectTo: 'panel', pathMatch: 'full' }
     ]
   },
-  { path: '**', redirectTo: 'panel' }
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({ imports: [RouterModule.forRoot(rutas)], exports: [RouterModule] })

@@ -4,7 +4,10 @@ import { AutenticacionService } from '../../servicios/autenticacion.service';
 import { InventarioService } from '../../servicios/inventario.service';
 import { ProductoService } from '../../servicios/producto.service';
 
-@Component({ selector: 'app-inventario', templateUrl: './inventario.component.html' })
+@Component({
+    selector: 'app-inventario', templateUrl: './inventario.component.html',
+    standalone: false
+})
 export class InventarioComponent implements OnInit {
   movimientos: MovimientoInventario[] = [];
   productos: Producto[] = [];

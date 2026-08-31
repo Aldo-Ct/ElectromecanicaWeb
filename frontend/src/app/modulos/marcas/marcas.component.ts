@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Marca } from '../../modelos/dominio.model';
 import { CatalogoService } from '../../servicios/catalogo.service';
 
-@Component({ selector: 'app-marcas', templateUrl: './marcas.component.html' })
+@Component({
+    selector: 'app-marcas', templateUrl: './marcas.component.html',
+    standalone: false
+})
 export class MarcasComponent implements OnInit {
   marcas: Marca[] = [];
   marca: Marca = { nombre: '', descripcion: '', logoUrl: '', activo: true };

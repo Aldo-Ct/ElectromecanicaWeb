@@ -106,7 +106,8 @@ public class InicializadorDatos {
         Marca marca = marcaRepository.findByNombreIgnoreCase(marcaNombre).orElseThrow();
         Producto producto = Producto.builder().sku(sku).nombre(nombre).descripcion(descripcion).categoria(categoria)
                 .marca(marca).modelo(modelo).tipoProducto(tipo).precioCompra(precioCompra).precioVenta(precioVenta)
-                .stock(cantidad).stockMinimo(5).unidadMedida(UnidadMedida.UNIDAD).garantia("12 meses").activo(true).build();
+                .stock(cantidad).stockMinimo(5).unidadMedida(UnidadMedida.UNIDAD).garantia("12 meses")
+                .activo(true).publicadoVenta(true).build();
         EspecificacionProducto especificacion = EspecificacionProducto.builder().producto(producto).voltaje(voltaje)
                 .potencia(potencia).diametro(diametro).build();
         producto.setEspecificacion(especificacion);

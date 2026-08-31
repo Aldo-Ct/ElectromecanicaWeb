@@ -1,0 +1,171 @@
+<main class="tienda-publica">
+  <a class="saltar-catalogo" href="#resultados-catalogo">Saltar a los productos</a>
+
+  <div class="franja-tienda">
+    <p><span aria-hidden="true">●</span> Atención especializada para requerimientos industriales</p>
+    <p>Precios finales con IGV incluido</p>
+  </div>
+
+  <header class="cabecera-tienda">
+    <a class="marca-tienda" routerLink="/" aria-label="Electromecánica, volver al inicio">
+      <span class="marca-tienda-icono" aria-hidden="true">ϟ</span>
+      <span><strong>Electromecánica</strong><small>SUMINISTRO INDUSTRIAL</small></span>
+    </a>
+
+    <label class="buscador-tienda">
+      <span aria-hidden="true">⌕</span>
+      <input [(ngModel)]="termino" (ngModelChange)="aplicarFiltros()" type="search" placeholder="¿Qué producto estás buscando?"
+             aria-label="Buscar en el catálogo">
+      <button type="button" *ngIf="termino" (click)="limpiarTermino()" aria-label="Limpiar búsqueda">×</button>
+    </label>
+
+    <a class="acceso-tienda" routerLink="/acceso">
+      <span aria-hidden="true">▣</span>
+      <span><small>Área del personal</small><strong>Acceso restringido</strong></span>
+    </a>
+  </header>
+
+  <nav class="navegacion-tienda" aria-label="Navegación del catálogo">
+    <a routerLink="/"><span aria-hidden="true">⌂</span> Inicio</a>
+    <button type="button" [class.activo]="!categoriaSeleccionada" (click)="seleccionarCategoria('')">Todos los productos</button>
+    <button *ngFor="let categoria of categoriasNavegacion; trackBy: identificarOpcion" type="button"
+            [class.activo]="categoriaSeleccionada === categoria.id"
+            (click)="seleccionarCategoria(categoria.id)">{{ categoria.nombre }}</button>
+    <a class="enlace-atencion" routerLink="/" fragment="contacto">Solicitar atención <span>→</span></a>
+  </nav>
+
+  <section class="presentacion-catalogo">
+    <div>
+      <p class="miga-catalogo"><a routerLink="/">Inicio</a><span>/</span> Catálogo industrial</p>
+      <p class="sobrelinea-catalogo">PRODUCTOS DISPONIBLES PARA VENTA</p>
+      <h1>Herramientas y componentes para mantener tu operación en marcha.</h1>
+      <p>Explora las referencias publicadas por nuestro equipo. Filtra por categoría o marca y consulta directamente cualquier requerimiento.</p>
+    </div>
+    <aside>
+      <span aria-hidden="true">✓</span>
+      <div><strong>Inventario conectado</strong><small>La disponibilidad se actualiza desde nuestro sistema interno.</small></div>
+    </aside>
+  </section>
+
+  <section class="beneficios-catalogo" aria-label="Beneficios de compra">
+    <div><span aria-hidden="true">▤</span><p><strong>Información organizada</strong><small>SKU, marca y especificaciones</small></p></div>
+    <div><span aria-hidden="true">◎</span><p><strong>Stock verificado</strong><small>Disponibilidad según inventario</small></p></div>
+    <div><span aria-hidden="true">◇</span><p><strong>Precio transparente</strong><small>Importes finales con IGV</small></p></div>
+    <div><span aria-hidden="true">✓</span><p><strong>Atención especializada</strong><small>Consulta antes de coordinar</small></p></div>
+  </section>
+
+  <section class="area-catalogo" id="resultados-catalogo">
+    <div class="barra-resultados">
+      <div>
+        <p>CATÁLOGO ELECTROMECÁNICO</p>
+        <h2>{{ categoriaSeleccionada ? 'Productos seleccionados' : 'Todos los productos' }}</h2>
+      </div>
+      <div class="controles-resultados">
+        <span>{{ productosFiltrados.length }} {{ productosFiltrados.length === 1 ? 'producto' : 'productos' }}</span>
+        <button class="boton-filtros" type="button" (click)="mostrarFiltros = true"><span aria-hidden="true">☷</span> Filtrar</button>
+        <label>Ordenar por
+          <select [(ngModel)]="orden" (ngModelChange)="aplicarFiltros()" aria-label="Ordenar productos">
+            <option value="recomendados">Recomendados</option>
+            <option value="precio-menor">Menor precio</option>
+            <option value="precio-mayor">Mayor precio</option>
+            <option value="nombre">Nombre A–Z</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="distribucion-catalogo">
+      <div class="fondo-filtros" *ngIf="mostrarFiltros" (click)="mostrarFiltros = false"></div>
+      <aside class="filtros-catalogo" [class.abiertos]="mostrarFiltros" aria-label="Filtros del catálogo">
+        <header><div><p>REFINAR RESULTADOS</p><h3>Filtros</h3></div><button type="button" (click)="mostrarFiltros = false" aria-label="Cerrar filtros">×</button></header>
+
+        <div class="grupo-filtro">
+          <h4>Categorías</h4>
+          <button type="button" [class.seleccionado]="!categoriaSeleccionada" (click)="seleccionarCategoria('')">
+            <span>Todos</span><small>{{ productos.length }}</small>
+          </button>
+          <button *ngFor="let categoria of categorias; trackBy: identificarOpcion" type="button"
+                  [class.seleccionado]="categoriaSeleccionada === categoria.id"
+                  (click)="seleccionarCategoria(categoria.id)">
+            <span>{{ categoria.nombre }}</span><small>{{ categoria.cantidad }}</small>
+          </button>
+        </div>
+
+        <div class="grupo-filtro">
+          <h4>Marca</h4>
+          <label *ngFor="let marca of marcas; trackBy: identificarOpcion">
+            <input type="radio" name="marcaCatalogo" [value]="marca.id" [(ngModel)]="marcaSeleccionada"
+                   (ngModelChange)="aplicarFiltros()">
+            <span>{{ marca.nombre }}</span><small>{{ marca.cantidad }}</small>
+          </label>
+        </div>
+
+        <button class="limpiar-filtros" type="button" (click)="limpiarFiltros()">Limpiar todos los filtros</button>
+      </aside>
+
+      <div class="contenido-productos">
+        <div class="filtros-aplicados" *ngIf="termino || categoriaSeleccionada || marcaSeleccionada">
+          <span *ngIf="termino">Búsqueda: “{{ termino }}” <button type="button" (click)="limpiarTermino()" aria-label="Quitar búsqueda">×</button></span>
+          <span *ngIf="categoriaSeleccionada">Categoría aplicada <button type="button" (click)="seleccionarCategoria('')" aria-label="Quitar categoría">×</button></span>
+          <span *ngIf="marcaSeleccionada">{{ marcaSeleccionada }} <button type="button" (click)="limpiarMarca()" aria-label="Quitar marca">×</button></span>
+        </div>
+
+        <div class="cargando-catalogo" *ngIf="buscando" aria-live="polite" aria-busy="true">
+          <span></span><p>Consultando productos disponibles…</p>
+        </div>
+
+        <div class="error-catalogo" *ngIf="mensajeError && !buscando">
+          <span aria-hidden="true">!</span>
+          <div>
+            <strong>No pudimos cargar el catálogo</strong>
+            <p>{{ mensajeError }}</p>
+            <button type="button" (click)="cargarProductos()">Volver a intentar</button>
+          </div>
+        </div>
+
+        <div class="cuadricula-productos" *ngIf="!buscando && !mensajeError && productosFiltrados.length">
+          <article class="tarjeta-producto" *ngFor="let producto of productosFiltrados; trackBy: identificarProducto">
+            <div class="imagen-producto">
+              <span class="tipo-producto">{{ producto.tipoProducto === 'ELECTRICO' ? 'Eléctrico' : (producto.tipoProducto === 'MECANICO' ? 'Mecánico' : 'Industrial') }}</span>
+              <img [src]="imagenProducto(producto)" [alt]="producto.nombre" loading="lazy" decoding="async"
+                   (error)="ocultarImagenRota($event)">
+              <span class="respaldo-imagen" aria-hidden="true">ϟ</span>
+            </div>
+            <div class="informacion-producto">
+              <p class="marca-producto">{{ producto.marcaNombre }}</p>
+              <h3>{{ producto.nombre }}</h3>
+              <p class="modelo-producto">{{ producto.modelo || producto.sku }}</p>
+              <p class="descripcion-producto">{{ producto.descripcion || 'Componente para aplicaciones industriales.' }}</p>
+              <div class="disponibilidad-producto" [class.agotado]="!producto.disponible">
+                <i></i><span>{{ producto.disponible ? 'Disponible' : 'Agotado temporalmente' }}</span>
+                <small *ngIf="producto.disponible">{{ producto.stockDisponible }} en stock</small>
+              </div>
+              <div class="precio-producto">
+                <small>Precio final</small><strong>{{ producto.precioVenta | moneda }}</strong><span>IGV incluido</span>
+              </div>
+              <a class="consultar-producto" [class.deshabilitado]="!producto.disponible"
+                 [href]="producto.disponible ? enlaceConsulta(producto) : null"
+                 [attr.aria-disabled]="!producto.disponible">{{ producto.disponible ? 'Consultar producto' : 'Sin disponibilidad' }} <span aria-hidden="true">→</span></a>
+              <a class="ficha-producto" *ngIf="producto.fichaTecnicaUrl" [href]="producto.fichaTecnicaUrl" target="_blank" rel="noopener">Ver ficha técnica</a>
+            </div>
+          </article>
+        </div>
+
+        <div class="sin-resultados-catalogo" *ngIf="!buscando && !mensajeError && !productosFiltrados.length">
+          <span aria-hidden="true">⌕</span><h3>No encontramos productos</h3><p>Prueba con otra palabra o elimina los filtros seleccionados.</p><button type="button" (click)="limpiarFiltros()">Ver todos los productos</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ayuda-catalogo">
+    <div><p>¿NO ENCUENTRAS LA REFERENCIA EXACTA?</p><h2>También buscamos productos por modelo o aplicación.</h2></div>
+    <a routerLink="/" fragment="contacto">Hablar con el equipo comercial <span aria-hidden="true">→</span></a>
+  </section>
+
+  <footer class="pie-tienda">
+    <div class="marca-tienda"><span class="marca-tienda-icono" aria-hidden="true">ϟ</span><span><strong>Electromecánica</strong><small>SUMINISTRO INDUSTRIAL</small></span></div>
+    <p>Equipos y componentes para mantener la industria en movimiento.</p>
+    <nav><a routerLink="/">Inicio</a><a routerLink="/" fragment="contacto">Contacto</a><a routerLink="/acceso">Acceso restringido</a></nav>
+  </footer>
+</main>

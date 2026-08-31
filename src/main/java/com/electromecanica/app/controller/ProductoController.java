@@ -1,6 +1,7 @@
 package com.electromecanica.app.controller;
 
 import com.electromecanica.app.dto.ProductoDTO;
+import com.electromecanica.app.dto.PublicacionProductoDTO;
 import com.electromecanica.app.entity.Usuario;
 import com.electromecanica.app.service.ProductoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,6 +45,13 @@ public class ProductoController {
     public ProductoDTO actualizar(@PathVariable Long id, @Valid @RequestBody ProductoDTO dto,
                                   @AuthenticationPrincipal Usuario usuario, HttpServletRequest solicitudHttp) {
         return productoService.actualizar(id, dto, usuario, solicitudHttp);
+    }
+
+    @PutMapping("/{id}/publicacion")
+    public ProductoDTO actualizarPublicacion(@PathVariable Long id, @Valid @RequestBody PublicacionProductoDTO dto,
+                                             @AuthenticationPrincipal Usuario usuario,
+                                             HttpServletRequest solicitudHttp) {
+        return productoService.actualizarPublicacion(id, dto, usuario, solicitudHttp);
     }
 
     @DeleteMapping("/{id}")

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 720" role="img" aria-labelledby="titulo descripcion">
+  <title id="titulo">Rodamiento industrial</title>
+  <desc id="descripcion">Ilustración de un rodamiento metálico sellado.</desc>
+  <defs>
+    <radialGradient id="fondo"><stop stop-color="#f8fafb"/><stop offset="1" stop-color="#dce6eb"/></radialGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#eef3f5"/><stop offset=".25" stop-color="#879aa7"/><stop offset=".52" stop-color="#f7f9fa"/><stop offset=".78" stop-color="#657984"/><stop offset="1" stop-color="#dce5e9"/></linearGradient>
+    <filter id="sombra" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="28" stdDeviation="24" flood-color="#172b3f" flood-opacity=".22"/></filter>
+  </defs>
+  <rect width="900" height="720" fill="url(#fondo)"/>
+  <circle cx="160" cy="132" r="112" fill="#176da9" opacity=".08"/>
+  <path d="M120 590h660" stroke="#bdcbd3" stroke-width="4" stroke-linecap="round"/>
+  <g transform="translate(450 360) rotate(-12)" filter="url(#sombra)">
+    <circle r="238" fill="url(#metal)"/>
+    <circle r="196" fill="#172d3d"/>
+    <circle r="150" fill="#0b1f2d"/>
+    <g fill="#dce4e8" stroke="#70818a" stroke-width="5">
+      <circle cx="0" cy="-174" r="25"/><circle cx="123" cy="-123" r="25"/><circle cx="174" cy="0" r="25"/><circle cx="123" cy="123" r="25"/>
+      <circle cx="0" cy="174" r="25"/><circle cx="-123" cy="123" r="25"/><circle cx="-174" cy="0" r="25"/><circle cx="-123" cy="-123" r="25"/>
+    </g>
+    <circle r="119" fill="url(#metal)"/>
+    <circle r="72" fill="#eaf0f3"/>
+    <circle r="228" fill="none" stroke="#fff" stroke-width="9" opacity=".5"/>
+  </g>
+  <g fill="#203c50" font-family="Arial, sans-serif" font-weight="700"><text x="674" y="615" font-size="26">6205</text><text x="674" y="644" font-size="16" opacity=".65">INDUSTRIAL</text></g>
+</svg>

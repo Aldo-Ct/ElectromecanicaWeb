@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Cliente } from '../../modelos/dominio.model';
 import { CatalogoService } from '../../servicios/catalogo.service';
 
-@Component({ selector: 'app-clientes', templateUrl: './clientes.component.html' })
+@Component({
+    selector: 'app-clientes', templateUrl: './clientes.component.html',
+    standalone: false
+})
 export class ClientesComponent implements OnInit {
   clientes: Cliente[] = [];
   cliente: Cliente = this.nuevo();

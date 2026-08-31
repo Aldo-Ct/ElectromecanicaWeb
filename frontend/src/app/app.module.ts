@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { InterceptorToken } from './autenticacion/interceptor-token';
@@ -21,14 +21,12 @@ import { UsuariosComponent } from './modulos/usuarios/usuarios.component';
 import { ReportesComponent } from './modulos/reportes/reportes.component';
 import { AuditoriaComponent } from './modulos/auditoria/auditoria.component';
 import { MonedaPipe } from './compartido/moneda.pipe';
+import { PaginaPublicaComponent } from './publico/pagina-publica/pagina-publica.component';
+import { CatalogoProductosComponent } from './publico/catalogo-productos/catalogo-productos.component';
 
-@NgModule({
-  declarations: [AppComponent, AccesoComponent, EstructuraAdministrativaComponent, PanelPrincipalComponent,
-    ProductosComponent, CategoriasComponent, MarcasComponent, InventarioComponent, AlmacenComponent,
-    VentasComponent, ClientesComponent, ProveedoresComponent, DevolucionesComponent, UsuariosComponent,
-    ReportesComponent, AuditoriaComponent, MonedaPipe],
-  imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpClientModule, AppRoutingModule],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: InterceptorToken, multi: true }],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [AppComponent, AccesoComponent, EstructuraAdministrativaComponent, PanelPrincipalComponent,
+        ProductosComponent, CategoriasComponent, MarcasComponent, InventarioComponent, AlmacenComponent,
+        VentasComponent, ClientesComponent, ProveedoresComponent, DevolucionesComponent, UsuariosComponent,
+        ReportesComponent, AuditoriaComponent, MonedaPipe, PaginaPublicaComponent, CatalogoProductosComponent],
+    bootstrap: [AppComponent], imports: [BrowserModule, FormsModule, ReactiveFormsModule, AppRoutingModule], providers: [{ provide: HTTP_INTERCEPTORS, useClass: InterceptorToken, multi: true }, provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule {}

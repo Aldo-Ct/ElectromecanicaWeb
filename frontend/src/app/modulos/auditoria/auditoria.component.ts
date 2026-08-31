@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Auditoria } from '../../modelos/dominio.model';
 import { AuditoriaService } from '../../servicios/auditoria.service';
 
-@Component({ selector: 'app-auditoria', templateUrl: './auditoria.component.html' })
+@Component({
+    selector: 'app-auditoria', templateUrl: './auditoria.component.html',
+    standalone: false
+})
 export class AuditoriaComponent implements OnInit {
   registros: Auditoria[] = [];
   mensajeError = '';

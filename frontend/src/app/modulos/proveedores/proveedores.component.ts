@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Proveedor } from '../../modelos/dominio.model';
 import { CatalogoService } from '../../servicios/catalogo.service';
 
-@Component({ selector: 'app-proveedores', templateUrl: './proveedores.component.html' })
+@Component({
+    selector: 'app-proveedores', templateUrl: './proveedores.component.html',
+    standalone: false
+})
 export class ProveedoresComponent implements OnInit {
   proveedores: Proveedor[] = [];
   proveedor: Proveedor = this.nuevo();

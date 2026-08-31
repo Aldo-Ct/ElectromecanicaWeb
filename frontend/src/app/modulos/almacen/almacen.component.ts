@@ -4,7 +4,10 @@ import { CatalogoService } from '../../servicios/catalogo.service';
 import { InventarioService } from '../../servicios/inventario.service';
 import { ProductoService } from '../../servicios/producto.service';
 
-@Component({ selector: 'app-almacen', templateUrl: './almacen.component.html' })
+@Component({
+    selector: 'app-almacen', templateUrl: './almacen.component.html',
+    standalone: false
+})
 export class AlmacenComponent implements OnInit {
   lotes: Lote[] = [];
   productos: Producto[] = [];

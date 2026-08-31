@@ -5,9 +5,10 @@ import { DevolucionService } from '../../servicios/devolucion.service';
 import { VentaService } from '../../servicios/venta.service';
 
 @Component({
-  selector: 'app-devoluciones',
-  templateUrl: './devoluciones.component.html',
-  styleUrls: ['./devoluciones.component.scss']
+    selector: 'app-devoluciones',
+    templateUrl: './devoluciones.component.html',
+    styleUrls: ['./devoluciones.component.scss'],
+    standalone: false
 })
 export class DevolucionesComponent implements OnInit, OnDestroy {
   readonly plazoDevolucionDias = 7;

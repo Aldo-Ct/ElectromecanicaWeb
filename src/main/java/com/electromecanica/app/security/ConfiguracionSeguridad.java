@@ -73,6 +73,7 @@ public class ConfiguracionSeguridad {
                 .exceptionHandling(excepciones -> excepciones.authenticationEntryPoint(puntoEntrada))
                 .authorizeHttpRequests(reglas -> reglas
                         .requestMatchers("/api/autenticacion/acceso", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/publico/productos", "/api/publico/productos/**").permitAll()
                         .requestMatchers("/api/auditoria/**").hasRole("ADMINISTRADOR")
                         .requestMatchers("/api/usuarios/contrasena").authenticated()
                         .requestMatchers("/api/usuarios/**").hasRole("ADMINISTRADOR")

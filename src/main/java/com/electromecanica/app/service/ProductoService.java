@@ -2,6 +2,8 @@ package com.electromecanica.app.service;
 
 import com.electromecanica.app.dto.EspecificacionProductoDTO;
 import com.electromecanica.app.dto.ProductoDTO;
+import com.electromecanica.app.dto.ProductoPublicoDTO;
+import com.electromecanica.app.dto.PublicacionProductoDTO;
 import com.electromecanica.app.entity.*;
 import com.electromecanica.app.repository.MovimientoInventarioRepository;
 import com.electromecanica.app.repository.ProductoRepository;
@@ -43,6 +45,11 @@ public class ProductoService {
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado")));
     }
 
+    @Transactional(readOnly = true)
+    public List<ProductoPublicoDTO> listarPublicados() {
+        return productoRepository.listarPublicados().stream().map(this::convertirPublico).toList();
+    }
+
     @Transactional
     public ProductoDTO crear(ProductoDTO dto, Usuario usuario, HttpServletRequest solicitudHttp) {
         productoRepository.findBySkuIgnoreCase(dto.sku()).ifPresent(p -> {
@@ -74,6 +81,7 @@ public class ProductoService {
                 .fichaTecnicaUrl(dto.fichaTecnicaUrl())
                 .garantia(dto.garantia())
                 .activo(dto.activo() == null || dto.activo())
+                .publicadoVenta(Boolean.TRUE.equals(dto.publicadoVenta()))
                 .build();
         aplicarEspecificacion(producto, dto.especificacion());
         productoRepository.save(producto);
@@ -114,6 +122,7 @@ public class ProductoService {
         producto.setFichaTecnicaUrl(dto.fichaTecnicaUrl());
         producto.setGarantia(dto.garantia());
         producto.setActivo(dto.activo() == null || dto.activo());
+        producto.setPublicadoVenta(producto.getActivo() && Boolean.TRUE.equals(dto.publicadoVenta()));
         aplicarEspecificacion(producto, dto.especificacion());
         auditoriaService.registrar(AccionAuditoria.ACTUALIZACION, usuario, "Producto", id,
                 "Producto actualizado: " + producto.getNombre(), anterior, producto.toString(), solicitudHttp);
@@ -125,8 +134,25 @@ public class ProductoService {
         Producto producto = productoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
         producto.setActivo(false);
+        producto.setPublicadoVenta(false);
         auditoriaService.registrar(AccionAuditoria.CAMBIO_ESTADO, usuario, "Producto", id,
                 "Producto desactivado", "activo", "inactivo", solicitudHttp);
+    }
+
+    @Transactional
+    public ProductoDTO actualizarPublicacion(Long id, PublicacionProductoDTO dto, Usuario usuario,
+                                             HttpServletRequest solicitudHttp) {
+        Producto producto = productoRepository.buscarCompletoPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
+        if (dto.publicado() && !producto.getActivo()) {
+            throw new IllegalArgumentException("Un producto inactivo no puede publicarse en la tienda");
+        }
+        boolean estadoAnterior = Boolean.TRUE.equals(producto.getPublicadoVenta());
+        producto.setPublicadoVenta(dto.publicado());
+        auditoriaService.registrar(AccionAuditoria.CAMBIO_ESTADO, usuario, "Producto", id,
+                dto.publicado() ? "Producto publicado en la tienda web" : "Producto ocultado de la tienda web",
+                estadoAnterior ? "publicado" : "oculto", dto.publicado() ? "publicado" : "oculto", solicitudHttp);
+        return convertir(producto);
     }
 
     public Producto obtener(Long id) {
@@ -145,7 +171,21 @@ public class ProductoService {
                 producto.getMarca().getNombre(), producto.getModelo(), producto.getTipoProducto(),
                 producto.getPrecioCompra(), producto.getPrecioVenta(), producto.getStock(), producto.getStockMinimo(),
                 producto.getUnidadMedida(), producto.getImagenUrl(), producto.getFichaTecnicaUrl(), producto.getGarantia(),
-                producto.getActivo(), producto.getFechaCreacion(), producto.getFechaActualizacion(), especificacionDTO);
+                producto.getActivo(), producto.getPublicadoVenta(), producto.getFechaCreacion(), producto.getFechaActualizacion(), especificacionDTO);
+    }
+
+    private ProductoPublicoDTO convertirPublico(Producto producto) {
+        EspecificacionProducto especificacion = producto.getEspecificacion();
+        EspecificacionProductoDTO especificacionDTO = especificacion == null ? null : new EspecificacionProductoDTO(
+                especificacion.getVoltaje(), especificacion.getCorriente(), especificacion.getPotencia(),
+                especificacion.getFrecuencia(), especificacion.getFases(), especificacion.getGradoProteccion(),
+                especificacion.getMaterial(), especificacion.getDimensiones(), especificacion.getPeso(),
+                especificacion.getDiametro(), especificacion.getCapacidad(), especificacion.getVelocidad());
+        return new ProductoPublicoDTO(producto.getId(), producto.getSku(), producto.getNombre(), producto.getDescripcion(),
+                producto.getCategoria().getId(), producto.getCategoria().getNombre(), producto.getMarca().getNombre(),
+                producto.getModelo(), producto.getTipoProducto(), producto.getPrecioVenta(), producto.getStock(),
+                producto.getStock() > 0, producto.getUnidadMedida(), producto.getImagenUrl(), producto.getFichaTecnicaUrl(),
+                producto.getGarantia(), especificacionDTO);
     }
 
     private String normalizarCodigoBarras(String codigoBarras) {

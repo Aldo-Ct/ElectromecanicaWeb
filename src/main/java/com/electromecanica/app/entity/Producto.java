@@ -82,6 +82,10 @@ public class Producto {
     @Builder.Default
     private Boolean activo = true;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean publicadoVenta = false;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
 

@@ -72,8 +72,29 @@ export interface Producto {
   fichaTecnicaUrl?: string;
   garantia?: string;
   activo: boolean;
+  publicadoVenta: boolean;
   fechaCreacion?: string;
   fechaActualizacion?: string;
+  especificacion?: EspecificacionProducto;
+}
+
+export interface ProductoPublico {
+  id: number;
+  sku: string;
+  nombre: string;
+  descripcion?: string;
+  categoriaId: number;
+  categoriaNombre: string;
+  marcaNombre: string;
+  modelo?: string;
+  tipoProducto: 'ELECTRICO' | 'MECANICO' | 'OTRO';
+  precioVenta: number;
+  stockDisponible: number;
+  disponible: boolean;
+  unidadMedida: 'UNIDAD' | 'METRO' | 'KILOGRAMO' | 'LITRO' | 'JUEGO' | 'CAJA';
+  imagenUrl?: string;
+  fichaTecnicaUrl?: string;
+  garantia?: string;
   especificacion?: EspecificacionProducto;
 }
 

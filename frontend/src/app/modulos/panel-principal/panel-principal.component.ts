@@ -3,7 +3,10 @@ import { Producto, ResumenReporte } from '../../modelos/dominio.model';
 import { ProductoService } from '../../servicios/producto.service';
 import { ReporteService } from '../../servicios/reporte.service';
 
-@Component({ selector: 'app-panel-principal', templateUrl: './panel-principal.component.html' })
+@Component({
+    selector: 'app-panel-principal', templateUrl: './panel-principal.component.html',
+    standalone: false
+})
 export class PanelPrincipalComponent implements OnInit {
   resumen?: ResumenReporte;
   productosCriticos: Producto[] = [];

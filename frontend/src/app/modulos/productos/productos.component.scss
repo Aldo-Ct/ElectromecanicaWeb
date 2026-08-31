@@ -1,6 +1,17 @@
 .aviso-precio { margin: -.25rem 0 1rem; padding: .75rem .85rem; border: 1px solid #cfe2f3; border-radius: 9px; color: #315b7d; background: #f1f8fe; font-size: .68rem; line-height: 1.5; }
 label small { display: inline; margin-left: .3rem; color: #687b8f; font-size: .58rem; font-weight: 600; }
 .acciones .qr { color: #126341; border-color: #b9dfcd; background: #ebf8f1; }
+.control-publicacion { display: grid; grid-template-columns: auto 1fr; align-items: flex-start; gap: .65rem; margin: .25rem 0; padding: .8rem; border: 1px solid #d8e5ef; border-radius: 10px; background: #f8fbfd; cursor: pointer; }
+.control-publicacion input { width: 18px; min-height: 18px; margin-top: .1rem; accent-color: #176aad; }
+.control-publicacion strong, .control-publicacion small { display: block; margin: 0; }
+.control-publicacion strong { color: #203b56; font-size: .72rem; }
+.control-publicacion small { margin-top: .22rem; color: #6f8295; font-size: .62rem; line-height: 1.45; }
+.estado-publicacion { display: inline-flex; align-items: center; gap: .35rem; padding: .3rem .55rem; border-radius: 99px; color: #6e7884; background: #eff2f5; font-size: .6rem; font-weight: 850; white-space: nowrap; }
+.estado-publicacion i { width: 6px; height: 6px; border-radius: 50%; background: #9ca7b1; }
+.estado-publicacion.publicado { color: #106044; background: #e3f6ec; }
+.estado-publicacion.publicado i { background: #23a56e; box-shadow: 0 0 0 3px rgba(35,165,110,.13); }
+.acciones .publicar { color: #6e4e05; background: #fff4d7; }
+.acciones button:disabled { opacity: .55; cursor: wait; }
 .fondo-etiqueta { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 1rem; background: rgba(3,14,28,.82); backdrop-filter: blur(4px); }
 .modal-etiqueta { width: min(520px, 100%); overflow: hidden; border-radius: 16px; background: #fff; box-shadow: 0 24px 70px rgba(0,0,0,.4); }
 .modal-etiqueta header, .modal-etiqueta footer { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: 1rem 1.2rem; }

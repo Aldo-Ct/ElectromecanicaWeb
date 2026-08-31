@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { RolUsuario, Usuario } from '../../modelos/dominio.model';
 import { UsuarioService } from '../../servicios/usuario.service';
 
-@Component({ selector: 'app-usuarios', templateUrl: './usuarios.component.html' })
+@Component({
+    selector: 'app-usuarios', templateUrl: './usuarios.component.html',
+    standalone: false
+})
 export class UsuariosComponent implements OnInit {
   usuarios: Usuario[] = [];
   roles = Object.values(RolUsuario);

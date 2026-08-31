@@ -7,9 +7,10 @@ import { VentaService } from '../../servicios/venta.service';
 import { formatearMoneda } from '../../compartido/moneda.pipe';
 
 @Component({
-  selector: 'app-ventas',
-  templateUrl: './ventas.component.html',
-  styleUrls: ['./ventas.component.scss']
+    selector: 'app-ventas',
+    templateUrl: './ventas.component.html',
+    styleUrls: ['./ventas.component.scss'],
+    standalone: false
 })
 export class VentasComponent implements OnInit, OnDestroy {
   readonly factorPrecioConIgv = 1.18;

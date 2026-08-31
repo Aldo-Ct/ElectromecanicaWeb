@@ -46,15 +46,20 @@
           <label>Velocidad<input name="velocidad" [(ngModel)]="producto.especificacion!.velocidad"></label>
         </div>
         <div class="grupo-campos dos"><label>Garantía<input name="garantia" [(ngModel)]="producto.garantia"></label><label>Ficha técnica (URL)<input name="ficha" type="url" [(ngModel)]="producto.fichaTecnicaUrl"></label></div>
+        <label>Imagen para la tienda (URL)<input name="imagenUrl" type="url" [(ngModel)]="producto.imagenUrl" placeholder="https://.../imagen-del-producto.jpg"></label>
+        <label class="control-publicacion">
+          <input name="publicadoVenta" type="checkbox" [(ngModel)]="producto.publicadoVenta">
+          <span><strong>Mostrar en la tienda web</strong><small>El producto aparecerá en el catálogo público. Puedes ocultarlo nuevamente cuando quieras.</small></span>
+        </label>
         <button class="boton primario ancho" [disabled]="formulario.invalid || !producto.categoriaId || !producto.marcaId || guardando">{{ guardando ? 'Guardando…' : (editandoId ? 'Actualizar producto' : 'Crear producto') }}</button>
       </form>
     </article>
 
     <article class="tarjeta">
       <div class="barra-herramientas"><div><h2>Catálogo</h2><p>Precios finales con IGV, stock y etiquetas.</p></div><div class="busqueda"><input [(ngModel)]="buscar" (keyup.enter)="cargar()" placeholder="Buscar por SKU, código, nombre o modelo"><button (click)="cargar()">Buscar</button></div></div>
-      <div class="tabla-contenedor"><table><thead><tr><th>Producto</th><th>Clasificación</th><th>Compra final</th><th>Venta final</th><th>Stock actual</th><th>Estado</th><th *ngIf="puedeEditar"></th></tr></thead>
-      <tbody><tr *ngFor="let p of productos"><td><b>{{ p.nombre }}</b><small class="codigo">{{ p.sku }} · {{ p.marcaNombre }} {{ p.modelo }}</small><small *ngIf="p.codigoBarras">Cód. barras: {{ p.codigoBarras }}</small></td><td><span class="estado neutro">{{ p.tipoProducto }}</span><small>{{ p.categoriaNombre }}</small></td><td>{{ p.precioCompra | moneda }}<small>Incluye IGV</small></td><td><b>{{ p.precioVenta | moneda }}</b><small>Incluye IGV</small></td><td><b [class.texto-peligro]="p.stock <= p.stockMinimo">{{ p.stock }}</b><small>Mín. {{ p.stockMinimo }}</small></td><td><span class="estado" [class.exitoso]="p.activo" [class.inactivo]="!p.activo">{{ p.activo ? 'Activo' : 'Inactivo' }}</span></td><td *ngIf="puedeEditar" class="acciones"><button type="button" class="qr" (click)="abrirEtiqueta(p)">QR</button><button type="button" (click)="editar(p)">Editar</button><button type="button" class="peligro" *ngIf="p.activo" (click)="desactivar(p)">Desactivar</button></td></tr>
-      <tr *ngIf="!productos.length"><td colspan="7" class="sin-datos">No se encontraron productos.</td></tr></tbody></table></div>
+      <div class="tabla-contenedor"><table><thead><tr><th>Producto</th><th>Clasificación</th><th>Compra final</th><th>Venta final</th><th>Stock actual</th><th>Estado</th><th>Tienda web</th><th *ngIf="puedeEditar"></th></tr></thead>
+      <tbody><tr *ngFor="let p of productos"><td><b>{{ p.nombre }}</b><small class="codigo">{{ p.sku }} · {{ p.marcaNombre }} {{ p.modelo }}</small><small *ngIf="p.codigoBarras">Cód. barras: {{ p.codigoBarras }}</small></td><td><span class="estado neutro">{{ p.tipoProducto }}</span><small>{{ p.categoriaNombre }}</small></td><td>{{ p.precioCompra | moneda }}<small>Incluye IGV</small></td><td><b>{{ p.precioVenta | moneda }}</b><small>Incluye IGV</small></td><td><b [class.texto-peligro]="p.stock <= p.stockMinimo">{{ p.stock }}</b><small>Mín. {{ p.stockMinimo }}</small></td><td><span class="estado" [class.exitoso]="p.activo" [class.inactivo]="!p.activo">{{ p.activo ? 'Activo' : 'Inactivo' }}</span></td><td><span class="estado-publicacion" [class.publicado]="p.publicadoVenta"><i></i>{{ p.publicadoVenta ? 'Publicado' : 'Oculto' }}</span></td><td *ngIf="puedeEditar" class="acciones"><button type="button" class="qr" (click)="abrirEtiqueta(p)">QR</button><button type="button" (click)="editar(p)">Editar</button><button type="button" class="publicar" *ngIf="p.activo" [disabled]="actualizandoPublicacionId === p.id" (click)="cambiarPublicacion(p)">{{ actualizandoPublicacionId === p.id ? 'Actualizando…' : (p.publicadoVenta ? 'Ocultar web' : 'Publicar web') }}</button><button type="button" class="peligro" *ngIf="p.activo" (click)="desactivar(p)">Desactivar</button></td></tr>
+      <tr *ngIf="!productos.length"><td colspan="8" class="sin-datos">No se encontraron productos.</td></tr></tbody></table></div>
     </article>
   </div>
 

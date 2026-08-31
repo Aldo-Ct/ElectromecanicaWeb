@@ -6,9 +6,10 @@ import { ProductoService } from '../../servicios/producto.service';
 import { formatearMoneda } from '../../compartido/moneda.pipe';
 
 @Component({
-  selector: 'app-productos',
-  templateUrl: './productos.component.html',
-  styleUrls: ['./productos.component.scss']
+    selector: 'app-productos',
+    templateUrl: './productos.component.html',
+    styleUrls: ['./productos.component.scss'],
+    standalone: false
 })
 export class ProductosComponent implements OnInit, OnDestroy {
   productos: Producto[] = [];
@@ -17,6 +18,7 @@ export class ProductosComponent implements OnInit, OnDestroy {
   buscar = '';
   editandoId?: number;
   guardando = false;
+  actualizandoPublicacionId?: number;
   mensaje = '';
   mensajeError = '';
   producto: Producto = this.nuevoProducto();
@@ -78,6 +80,25 @@ export class ProductosComponent implements OnInit, OnDestroy {
     this.productoService.desactivar(valor.id).subscribe({ next: () => this.cargar(), error: error => this.mensajeError = error.message });
   }
 
+  cambiarPublicacion(valor: Producto): void {
+    if (!valor.id || this.actualizandoPublicacionId) return;
+    const publicar = !valor.publicadoVenta;
+    this.actualizandoPublicacionId = valor.id;
+    this.mensaje = '';
+    this.mensajeError = '';
+    this.productoService.actualizarPublicacion(valor.id, publicar).subscribe({
+      next: actualizado => {
+        valor.publicadoVenta = actualizado.publicadoVenta;
+        this.mensaje = publicadoTexto(actualizado.publicadoVenta);
+        this.actualizandoPublicacionId = undefined;
+      },
+      error: error => {
+        this.mensajeError = error.message;
+        this.actualizandoPublicacionId = undefined;
+      }
+    });
+  }
+
   async abrirEtiqueta(valor: Producto): Promise<void> {
     this.cerrarEtiqueta();
     this.productoEtiqueta = valor;
@@ -131,11 +152,15 @@ export class ProductosComponent implements OnInit, OnDestroy {
     return {
       sku: '', codigoBarras: '', nombre: '', descripcion: '', categoriaId: 0, marcaId: 0, modelo: '',
       tipoProducto: 'ELECTRICO', precioCompra: 0, precioVenta: 0, stock: 0, stockMinimo: 2,
-      unidadMedida: 'UNIDAD', garantia: '12 meses', activo: true, especificacion: {}
+      unidadMedida: 'UNIDAD', garantia: '12 meses', activo: true, publicadoVenta: false, especificacion: {}
     };
   }
 
   private escaparHtml(valor: string): string {
     return valor.replace(/[&<>'"]/g, caracter => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[caracter] || caracter));
   }
+}
+
+function publicadoTexto(publicado: boolean): string {
+  return publicado ? 'El producto ya está visible en la tienda web.' : 'El producto fue ocultado de la tienda web.';
 }

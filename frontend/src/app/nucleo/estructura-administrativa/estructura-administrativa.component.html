@@ -2,14 +2,39 @@
   <aside class="barra-lateral" [class.abierta]="menuAbierto">
     <div class="identidad"><span class="identidad-simbolo">⚡</span><div><b>Electromecánica</b><small>GESTIÓN INDUSTRIAL</small></div></div>
     <nav>
-      <a *ngFor="let item of visibles" [routerLink]="item.ruta" routerLinkActive="activo" (click)="menuAbierto=false">
+      <a *ngFor="let item of visibles" [routerLink]="item.ruta" routerLinkActive="activo" (click)="menuAbierto=false; cerrarPerfil()">
         <span class="simbolo-menu">{{ item.simbolo }}</span><span>{{ item.etiqueta }}</span>
       </a>
     </nav>
-    <div class="sesion" *ngIf="autenticacion.usuario$ | async as usuario">
-      <div class="avatar">{{ usuario.nombre.charAt(0) }}{{ usuario.apellido.charAt(0) }}</div>
-      <div><b>{{ usuario.nombre }} {{ usuario.apellido }}</b><small>{{ usuario.rol }}</small></div>
-      <button (click)="salir()" title="Cerrar sesión">↪</button>
+    <div class="contenedor-sesion" *ngIf="autenticacion.usuario$ | async as usuario">
+      <div class="menu-perfil" id="menu-perfil" *ngIf="menuPerfilAbierto" role="menu">
+        <div class="cabecera-menu-perfil">
+          <div class="avatar grande">{{ usuario.nombre.charAt(0) }}{{ usuario.apellido.charAt(0) }}</div>
+          <div>
+            <b>{{ usuario.nombre }} {{ usuario.apellido }}</b>
+            <small>{{ usuario.correo }}</small>
+            <span>{{ usuario.rol }}</span>
+          </div>
+        </div>
+        <div class="opciones-perfil">
+          <button type="button" role="menuitem" (click)="abrirCambioContrasena()">
+            <span aria-hidden="true">◇</span><div><b>Cambiar contraseña</b><small>Actualiza tus credenciales</small></div>
+          </button>
+          <a routerLink="/" role="menuitem" (click)="menuAbierto=false; cerrarPerfil()">
+            <span aria-hidden="true">⌂</span><div><b>Ir al sitio público</b><small>Ver la página institucional</small></div>
+          </a>
+        </div>
+        <button class="cerrar-sesion-menu" type="button" role="menuitem" (click)="salir()">
+          <span aria-hidden="true">↪</span> Cerrar sesión
+        </button>
+      </div>
+
+      <button class="sesion" type="button" (click)="alternarPerfil()" [attr.aria-expanded]="menuPerfilAbierto"
+              aria-controls="menu-perfil" title="Abrir menú de perfil">
+        <div class="avatar">{{ usuario.nombre.charAt(0) }}{{ usuario.apellido.charAt(0) }}</div>
+        <div><b>{{ usuario.nombre }} {{ usuario.apellido }}</b><small>{{ usuario.rol }}</small></div>
+        <span class="indicador-perfil" [class.abierto]="menuPerfilAbierto" aria-hidden="true">⌃</span>
+      </button>
     </div>
   </aside>
   <div class="contenido-aplicacion">
@@ -21,4 +46,51 @@
     <main class="area-trabajo"><router-outlet></router-outlet></main>
   </div>
   <button class="fondo-menu" *ngIf="menuAbierto" (click)="menuAbierto=false" aria-label="Cerrar menú"></button>
+  <button class="fondo-perfil" *ngIf="menuPerfilAbierto" (click)="cerrarPerfil()" aria-label="Cerrar menú de perfil"></button>
+
+  <div class="fondo-modal" *ngIf="cambioContrasenaAbierto" (click)="cerrarCambioContrasena()">
+    <section class="modal-contrasena" role="dialog" aria-modal="true" aria-labelledby="titulo-cambio-contrasena"
+             (click)="$event.stopPropagation()">
+      <header>
+        <div>
+          <p class="sobretitulo">SEGURIDAD DE LA CUENTA</p>
+          <h2 id="titulo-cambio-contrasena">Cambiar contraseña</h2>
+          <p>Usa una contraseña diferente a la actual y de al menos 8 caracteres.</p>
+        </div>
+        <button type="button" (click)="cerrarCambioContrasena()" [disabled]="procesandoContrasena" aria-label="Cerrar">×</button>
+      </header>
+
+      <form #formularioContrasena="ngForm" (ngSubmit)="cambiarContrasena()">
+        <label>Contraseña actual
+          <input [type]="mostrarContrasenas ? 'text' : 'password'" name="contrasenaActual"
+                 [(ngModel)]="contrasenas.actual" required autocomplete="current-password">
+        </label>
+        <label>Contraseña nueva
+          <input [type]="mostrarContrasenas ? 'text' : 'password'" name="contrasenaNueva"
+                 [(ngModel)]="contrasenas.nueva" required minlength="8" autocomplete="new-password">
+          <small>Debe contener al menos 8 caracteres.</small>
+        </label>
+        <label>Confirmar contraseña nueva
+          <input [type]="mostrarContrasenas ? 'text' : 'password'" name="confirmacionContrasena"
+                 [(ngModel)]="contrasenas.confirmacion" required minlength="8" autocomplete="new-password">
+        </label>
+
+        <label class="mostrar-contrasena">
+          <input type="checkbox" name="mostrarContrasenas" [(ngModel)]="mostrarContrasenas">
+          Mostrar contraseñas
+        </label>
+
+        <div class="alerta error" *ngIf="errorContrasena">{{ errorContrasena }}</div>
+        <div class="alerta exito" *ngIf="mensajeContrasena">{{ mensajeContrasena }}</div>
+
+        <div class="acciones-modal">
+          <button class="boton secundario" type="button" (click)="cerrarCambioContrasena()" [disabled]="procesandoContrasena">Cancelar</button>
+          <button class="boton primario" type="submit"
+                  [disabled]="formularioContrasena.invalid || procesandoContrasena">
+            {{ procesandoContrasena ? 'Actualizando…' : 'Actualizar contraseña' }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
 </div>

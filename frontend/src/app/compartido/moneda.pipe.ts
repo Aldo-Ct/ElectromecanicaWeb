@@ -10,7 +10,10 @@ export function formatearMoneda(valor: number | string | null | undefined): stri
   return `S/ ${FORMATEADOR_MONEDA.format(Number.isFinite(monto) ? monto : 0)}`;
 }
 
-@Pipe({ name: 'moneda' })
+@Pipe({
+    name: 'moneda',
+    standalone: false
+})
 export class MonedaPipe implements PipeTransform {
   transform(valor: number | string | null | undefined): string {
     return formatearMoneda(valor);

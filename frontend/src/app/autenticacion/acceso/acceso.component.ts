@@ -5,9 +5,10 @@ import { finalize } from 'rxjs';
 import { AutenticacionService } from '../../servicios/autenticacion.service';
 
 @Component({
-  selector: 'app-acceso',
-  templateUrl: './acceso.component.html',
-  styleUrls: ['./acceso.component.scss']
+    selector: 'app-acceso',
+    templateUrl: './acceso.component.html',
+    styleUrls: ['./acceso.component.scss'],
+    standalone: false
 })
 export class AccesoComponent {
   procesando = false;

@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ResumenReporte } from '../../modelos/dominio.model';
 import { ReporteService } from '../../servicios/reporte.service';
 
-@Component({ selector: 'app-reportes', templateUrl: './reportes.component.html' })
+@Component({
+    selector: 'app-reportes', templateUrl: './reportes.component.html',
+    standalone: false
+})
 export class ReportesComponent implements OnInit {
   resumen?: ResumenReporte;
   mensajeError = '';
